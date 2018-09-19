@@ -137,6 +137,8 @@ def main():
     wordSearchInfo.toString()
     print2DWordSearch(wordSearchInfo)
     
+    #TODO check if the plural words are found before singular ones. If not, they should be. Ex: check for an 's' at the end of a found word if wordList has a plural version
+    #TODO add threads
     for height in range(wordSearchInfo.wordSearchHeight):
         for width in range(wordSearchInfo.wordSearchWidth):
             checkForWord(height, width, wordSearchInfo, wordList) 

@@ -144,7 +144,7 @@ def getCanidatePosition(wordSearchInfo):
         canidatePositionHeight = canidatePosition // wordSearchInfo.wordSearchWidth
         canidatePositionWidth = canidatePosition % wordSearchInfo.wordSearchWidth
         if wordSearchInfo.wordSearch[canidatePositionHeight][canidatePositionWidth] != 0:
-            wordSearchInfo.openWordSearchSpaces = wordSearchInfo.openWordSearchSpaces.remove(canidatePosition)#TODO why dafuq does this one work, but not the others
+            wordSearchInfo.openWordSearchSpaces = wordSearchInfo.openWordSearchSpaces.remove(canidatePosition)#TODO why does this one work, but not the others
             continue
         return canidatePosition
 

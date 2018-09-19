@@ -429,6 +429,7 @@ def main():
     wordSearchInfo = WordSearchInfo(wordSearch, wordSearchDepth, wordSearchHeight, wordSearchWidth, wordSearchSize, openWordSearchSpaces)
     print3DWordSearch(wordSearchInfo)
     
+    #TODO add threads
     for depth in range(len(wordSearch)):
         for height in range(len(wordSearch[depth])):
             for width in range(len(wordSearch[depth][height])):
