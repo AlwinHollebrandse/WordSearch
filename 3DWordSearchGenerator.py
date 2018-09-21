@@ -16,11 +16,8 @@ def addWord(canidatePositionDepthIncrementValue, canidatePositionHeightIncrement
     for letter in word: #add the word to the word Search
         wordSearchInfo.wordSearch[canidatePositionDepth][canidatePositionHeight][canidatePositionWidth] = letter #update the correct spot in wordSearch
         nextOpenSpace = canidatePositionWidth + (canidatePositionHeight * wordSearchInfo.wordSearchWidth) + (canidatePositionDepth * wordSearchInfo.wordSearchWidth * wordSearchInfo.wordSearchHeight) #remove said spot from openWordSearchSpaces
-        if nextOpenSpace in wordSearchInfo.openWordSearchSpaces:#TODO shorthen?
-            tempOpenWordSearchSpaces = wordSearchInfo.openWordSearchSpaces
-            tempOpenWordSearchSpaces.remove(nextOpenSpace)
-            wordSearchInfo.openWordSearchSpaces = tempOpenWordSearchSpaces
-            #wordSearchInfo.openWordSearchSpaces = wordSearchInfo.openWordSearchSpaces.remove(nextOpenSpace)
+        if nextOpenSpace in wordSearchInfo.openWordSearchSpaces:
+            wordSearchInfo.openWordSearchSpaces.remove(nextOpenSpace)
         canidatePositionWidth += canidatePositionWidthIncrementValue
         canidatePositionHeight += canidatePositionHeightIncrementValue
         canidatePositionDepth += canidatePositionDepthIncrementValue
@@ -352,6 +349,7 @@ def getCanidatePosition(wordSearchInfo):
         canidatePositionHeight = (canidatePosition // wordSearchInfo.wordSearchWidth) % wordSearchInfo.wordSearchHeight
         canidatePositionDepth = canidatePosition // (wordSearchInfo.wordSearchWidth * wordSearchInfo.wordSearchHeight)
         if wordSearchInfo.wordSearch[canidatePositionDepth][canidatePositionHeight][canidatePositionWidth] != 0:
+            wordSearchInfo.openWordSearchSpaces.remove(canidatePosition)
             continue
         return canidatePosition
 
@@ -391,10 +389,7 @@ def createWordSearch(wordList, wordSearchInfo, directions):
                 wordList.remove(word)
                 break
         if wordAdded == False:
-            tempOpenWordSearchSpaces = wordSearchInfo.openWordSearchSpaces#TODO shorten?
-            tempOpenWordSearchSpaces.remove(canidatePosition)
-            wordSearchInfo.openWordSearchSpaces = tempOpenWordSearchSpaces
-            #wordSearchInfo.openWordSearchSpaces = wordSearchInfo.openWordSearchSpaces.remove(canidatePosition) #this randomly sets openWordSearchSpaces as None
+            wordSearchInfo.openWordSearchSpaces.remove(canidatePosition)
     print("words left:",wordList)
     if len(wordList) == 0:
         return True
