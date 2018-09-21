@@ -15,7 +15,7 @@ def addWord(canidatePositionIIncrementValue, canidatePositionJIncrementValue, ca
     for letter in word: #add the word to the word Search
         wordSearchInfo.wordSearch[canidatePositionHeight][canidatePositionWidth] = letter #update the correct spot in wordSearch
         nextOpenSpace = (wordSearchInfo.wordSearchWidth * canidatePositionHeight) + canidatePositionWidth #remove said spot from openWordSearchSpaces
-        if nextOpenSpace in wordSearchInfo.openWordSearchSpaces:#TODO shorthen?
+        if nextOpenSpace in wordSearchInfo.openWordSearchSpaces:
             wordSearchInfo.openWordSearchSpaces.remove(nextOpenSpace)
         canidatePositionHeight += canidatePositionIIncrementValue
         canidatePositionWidth += canidatePositionJIncrementValue
