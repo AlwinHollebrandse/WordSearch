@@ -108,7 +108,7 @@ def checkForWord(height, width, wordSearchInfo, wordList):
                         nextWordSearchWidthIndex += 1
                         nextWordSearchHeightIndex += -1
 
-        if foundWord: #TODO, if 2 words start in the same locaion, only 1 will be found. Fix this. 
+        if foundWord: 
             print(wordList.pop(word),"was found starting at postition [",height,"][",width,"] going in the",direction,"direction") #use this if you just want to find the first instance of the word
             #print(wordList[word],"was found starting at postition [",height,"][",width,"] going in the",direction,"direction") #use this if you just want to find every instance of the word. This has a slower performance
 
@@ -137,7 +137,6 @@ def main():
     wordSearchInfo.toString()
     print2DWordSearch(wordSearchInfo)
     
-    #TODO check if the plural words are found before singular ones. If not, they should be. Ex: check for an 's' at the end of a found word if wordList has a plural version
     #TODO add threads
     for height in range(wordSearchInfo.wordSearchHeight):
         for width in range(wordSearchInfo.wordSearchWidth):
