@@ -43,31 +43,33 @@ class WordSearchInfo:
         
 
     # TODO need a better 2d vs 3d indicator
-    def checkWordInDirection(self, foundWord, word, direction, startingHeight, startingWidth, heightChange, widthChange, startingDepth = 'default', depthChange = 0):
+    def checkWordInDirection(self, foundWord, word, direction, directionsFoundIn, startingHeight, startingWidth, heightChange, widthChange, startingDepth = 0, depthChange = 0):
         nextWordSearchDepthIndex = startingDepth
         nextWordSearchHeightIndex = startingHeight
         nextWordSearchWidthIndex = startingWidth
 
-        for i,letter in enumerate(word):
+        for letter in word:
 
             # 2D
-            if startingDepth == 'default' and self.wordSearch[nextWordSearchHeightIndex][nextWordSearchWidthIndex] == wordList[word][i]:
+            if startingDepth == 0 and self.wordSearch[nextWordSearchHeightIndex][nextWordSearchWidthIndex] == letter:
                 foundWord = True
 
             # 3D
-            elif self.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == wordList[word][i]:
+            elif self.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == letter:
                 foundWord = True
                 
             else:
                 foundWord = False
                 break
            
-            if directionCheck(direction, nextWordSearchDepthIndex, nextWordSearchHeightIndex, nextWordSearchWidthIndex):
+            if directionCheck(self, direction, nextWordSearchDepthIndex, nextWordSearchHeightIndex, nextWordSearchWidthIndex):
                 nextWordSearchDepthIndex += depthChange
                 nextWordSearchHeightIndex += heightChange
                 nextWordSearchWidthIndex += widthChange
 
-        return direction
+        if foundWord:
+            directionsFoundIn.append(direction)
+            foundWord = False
 
 
 def directionCheck(self, direction, nextWordSearchDepthIndex, nextWordSearchHeightIndex, nextWordSearchWidthIndex):
