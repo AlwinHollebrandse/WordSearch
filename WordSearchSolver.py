@@ -18,24 +18,29 @@ def main():
         wordSearchDepth = wordSearchDepth, wordList = wordList, wordSearch = wordSearch)
     wordSearchInfo.toString()
     
+    foundWordSet = set([])
     # TODO parallelize
     for height in range(wordSearchInfo.wordSearchHeight):
         for width in range(wordSearchInfo.wordSearchWidth):
-            checkForWord(height, width, wordSearchInfo, wordList) 
-    print('words not found:',wordList)   
+            checkForWord(height, width, wordSearchInfo, wordList, foundWordSet) 
+    print('words not found:', list(set(wordList) - foundWordSet))
 
 
-def checkForWord(height, width, wordSearchInfo, wordList):
-    for word in range(len(wordList) - 1, -1, -1):  # for each word in the wordList, itereted backwards so that things can be popped cleanly  
+def checkForWord(height, width, wordSearchInfo, wordList, foundWordSet):
+    for word in reversed(wordList): # for each word in the wordList, itereted backwards so that things can be popped cleanly  
         foundWord = False
 
-        if wordSearchInfo.wordSearch[height][width] == wordList[word][0]: 
+        if wordSearchInfo.wordSearch[height][width] == word[0]: 
 
             # check the right direction
-            if foundWord == False and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[height][width + 1] == wordList[word][1]:
+            if foundWord == False and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[height][width + 1] == word[1]:
+                    
+                # wordSearchInfo.checkWordInDirection(foundWord = foundWord, word = word, direction = 'right', startingHeight = height, startingWidth = width, 
+                #     heightChange = 0, widthChange = 1)
+
                 nextWordSearchWidthIndex = width
-                for letter in range(len(wordList[word])):
-                    if wordSearchInfo.wordSearch[height][nextWordSearchWidthIndex] == wordList[word][letter]:
+                for letter,realLetter in enumerate(word):
+                    if wordSearchInfo.wordSearch[height][nextWordSearchWidthIndex] == word[letter]:
                         foundWord = True
                         direction = 'right'
                     else:
@@ -45,11 +50,11 @@ def checkForWord(height, width, wordSearchInfo, wordList):
                         nextWordSearchWidthIndex += 1
 
             # check the right, down direction
-            if foundWord == False and height + 1 < wordSearchInfo.wordSearchHeight and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[height + 1][width + 1] == wordList[word][1]:
+            if foundWord == False and height + 1 < wordSearchInfo.wordSearchHeight and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[height + 1][width + 1] == word[1]:
                 nextWordSearchWidthIndex = width
                 nextWordSearchHeightIndex = height
-                for letter in range(len(wordList[word])):
-                    if wordSearchInfo.wordSearch[nextWordSearchHeightIndex][nextWordSearchWidthIndex] == wordList[word][letter]:
+                for letter,realLetter in enumerate(word):
+                    if wordSearchInfo.wordSearch[nextWordSearchHeightIndex][nextWordSearchWidthIndex] == word[letter]:
                         foundWord = True
                         direction = 'rightDown'
                     else:
@@ -60,10 +65,10 @@ def checkForWord(height, width, wordSearchInfo, wordList):
                         nextWordSearchHeightIndex += 1
 
             # check the down direction
-            if foundWord == False and height + 1 < wordSearchInfo.wordSearchHeight and wordSearchInfo.wordSearch[height + 1][width] == wordList[word][1]:
+            if foundWord == False and height + 1 < wordSearchInfo.wordSearchHeight and wordSearchInfo.wordSearch[height + 1][width] == word[1]:
                 nextWordSearchHeightIndex = height
-                for letter in range(len(wordList[word])):
-                    if wordSearchInfo.wordSearch[nextWordSearchHeightIndex][width] == wordList[word][letter]:
+                for letter,realLetter in enumerate(word):
+                    if wordSearchInfo.wordSearch[nextWordSearchHeightIndex][width] == word[letter]:
                         foundWord = True
                         direction = 'down'
                     else:
@@ -73,11 +78,11 @@ def checkForWord(height, width, wordSearchInfo, wordList):
                         nextWordSearchHeightIndex += 1
 
             # check the left, down direction
-            if foundWord == False and height + 1 < wordSearchInfo.wordSearchHeight and width - 1 >= 0 and wordSearchInfo.wordSearch[height + 1][width - 1] == wordList[word][1]:
+            if foundWord == False and height + 1 < wordSearchInfo.wordSearchHeight and width - 1 >= 0 and wordSearchInfo.wordSearch[height + 1][width - 1] == word[1]:
                 nextWordSearchWidthIndex = width
                 nextWordSearchHeightIndex = height
-                for letter in range(len(wordList[word])):
-                    if wordSearchInfo.wordSearch[nextWordSearchHeightIndex][nextWordSearchWidthIndex] == wordList[word][letter]:
+                for letter,realLetter in enumerate(word):
+                    if wordSearchInfo.wordSearch[nextWordSearchHeightIndex][nextWordSearchWidthIndex] == word[letter]:
                         foundWord = True
                         direction = 'leftDown'
                     else:
@@ -88,10 +93,10 @@ def checkForWord(height, width, wordSearchInfo, wordList):
                         nextWordSearchHeightIndex += 1
 
             # check the left direction
-            if foundWord == False and width - 1 >= 0 and wordSearchInfo.wordSearch[height][width - 1] == wordList[word][1]:
+            if foundWord == False and width - 1 >= 0 and wordSearchInfo.wordSearch[height][width - 1] == word[1]:
                 nextWordSearchWidthIndex = width
-                for letter in range(len(wordList[word])):
-                    if wordSearchInfo.wordSearch[height][nextWordSearchWidthIndex] == wordList[word][letter]:
+                for letter,realLetter in enumerate(word):
+                    if wordSearchInfo.wordSearch[height][nextWordSearchWidthIndex] == word[letter]:
                         foundWord = True
                         direction = 'left'
                     else:
@@ -101,11 +106,11 @@ def checkForWord(height, width, wordSearchInfo, wordList):
                         nextWordSearchWidthIndex += -1
 
             # check the left up direction
-            if foundWord == False and height - 1 >= 0 and width - 1 >= 0 and wordSearchInfo.wordSearch[height - 1][width - 1] == wordList[word][1]:
+            if foundWord == False and height - 1 >= 0 and width - 1 >= 0 and wordSearchInfo.wordSearch[height - 1][width - 1] == word[1]:
                 nextWordSearchWidthIndex = width
                 nextWordSearchHeightIndex = height
-                for letter in range(len(wordList[word])):
-                    if wordSearchInfo.wordSearch[nextWordSearchHeightIndex][nextWordSearchWidthIndex] == wordList[word][letter]:
+                for letter,realLetter in enumerate(word):
+                    if wordSearchInfo.wordSearch[nextWordSearchHeightIndex][nextWordSearchWidthIndex] == word[letter]:
                         foundWord = True
                         direction = 'leftUp'
                     else:
@@ -116,10 +121,10 @@ def checkForWord(height, width, wordSearchInfo, wordList):
                         nextWordSearchHeightIndex += -1
 
             # check the up direction
-            if foundWord == False and height - 1 >= 0 and wordSearchInfo.wordSearch[height - 1][width] == wordList[word][1]:
+            if foundWord == False and height - 1 >= 0 and wordSearchInfo.wordSearch[height - 1][width] == word[1]:
                 nextWordSearchHeightIndex = height
-                for letter in range(len(wordList[word])):
-                    if wordSearchInfo.wordSearch[nextWordSearchHeightIndex][width] == wordList[word][letter]:
+                for letter,realLetter in enumerate(word):
+                    if wordSearchInfo.wordSearch[nextWordSearchHeightIndex][width] == word[letter]:
                         foundWord = True
                         direction = 'up'
                     else:
@@ -129,11 +134,11 @@ def checkForWord(height, width, wordSearchInfo, wordList):
                         nextWordSearchHeightIndex += -1
 
             # check the right, up direction
-            if foundWord == False and height - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[height - 1][width + 1] == wordList[word][1]:
+            if foundWord == False and height - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[height - 1][width + 1] == word[1]:
                 nextWordSearchWidthIndex = width
                 nextWordSearchHeightIndex = height
-                for letter in range(len(wordList[word])):
-                    if wordSearchInfo.wordSearch[nextWordSearchHeightIndex][nextWordSearchWidthIndex] == wordList[word][letter]:
+                for letter,realLetter in enumerate(word):
+                    if wordSearchInfo.wordSearch[nextWordSearchHeightIndex][nextWordSearchWidthIndex] == word[letter]:
                         foundWord = True
                         direction = 'rightUp'
                     else:
@@ -144,8 +149,9 @@ def checkForWord(height, width, wordSearchInfo, wordList):
                         nextWordSearchHeightIndex += -1
 
         if foundWord: 
-            print(wordList.pop(word), 'was found starting at postition [', height, '][', width, '] going in the', direction, 'direction') # NOTE use this if you just want to find the first instance of the word
-            #print(wordList[word], 'was found starting at postition [', height, '][', width, '] going in the', direction, 'direction') # NOTE use this if you just want to find every instance of the word. This has a slower average performance 
+            print(word, 'was found starting at postition [', height, '][', width, '] going in the', direction, 'direction') # NOTE use this if you just want to find every instance of the word. This has a slower average performance 
+        else:
+            foundWordSet.add(word)
 
 if __name__=='__main__':
     main()

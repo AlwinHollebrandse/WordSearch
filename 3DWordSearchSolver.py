@@ -319,7 +319,7 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList):
                     else:
                         foundWord = False
                         break
-                    if depth - 1 >= 0 and nextWordSearchHeightIndex - 1 >= 0 and nextWordSearchWidthIndex + 1 < wordSearchInfo.wordSearchWidth:
+                    if depth - 1 >= 0 and nextWordSearchHeightIndex - 1 >= 0 and nextWordSearchWidthIndex + 1 < wordSearchInfo.wordSearchWidth: # TODO shouldnt these depths be nextWordSearchDepthIndex?
                         nextWordSearchDepthIndex += -1
                         nextWordSearchWidthIndex += 1
                         nextWordSearchHeightIndex -= 1
