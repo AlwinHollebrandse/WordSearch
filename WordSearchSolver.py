@@ -36,7 +36,7 @@ def checkForWord(height, width, wordSearchInfo, wordList, foundWordSet):
             # check the right direction
             if width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[height][width + 1] == word[1]:
                 wordSearchInfo.checkWordInDirection(foundWord = foundWord, word = word, direction = 'right', directionsFoundIn = directionsFoundIn, 
-                    startingHeight = height, startingWidth = width, heightChange = 0, widthChange = 1) 
+                    startingHeight = height, startingWidth = width, heightChange = 0, widthChange = 1)
 
             # check the right, down direction
             if height + 1 < wordSearchInfo.wordSearchHeight and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[height + 1][width + 1] == word[1]:
@@ -75,7 +75,7 @@ def checkForWord(height, width, wordSearchInfo, wordList, foundWordSet):
 
 
         for direction in directionsFoundIn:
-            print(word, 'was found starting at postition [', height, '][', width, '] going in the', direction, 'direction') # NOTE use this if you just want to find every instance of the word. This has a slower average performance 
+            print(word, 'was found starting at postition [', height, '][', width, '] going in the', direction, 'direction')
             foundWordSet.add(word)
 
 if __name__=='__main__':

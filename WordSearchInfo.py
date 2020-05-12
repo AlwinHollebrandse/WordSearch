@@ -42,8 +42,7 @@ class WordSearchInfo:
                 print('\n')
         
 
-    # TODO need a better 2d vs 3d indicator
-    def checkWordInDirection(self, foundWord, word, direction, directionsFoundIn, startingHeight, startingWidth, heightChange, widthChange, startingDepth = 0, depthChange = 0):
+    def checkWordInDirection(self, foundWord, word, direction, directionsFoundIn, startingHeight, startingWidth, heightChange, widthChange, startingDepth = -1, depthChange = 0):
         nextWordSearchDepthIndex = startingDepth
         nextWordSearchHeightIndex = startingHeight
         nextWordSearchWidthIndex = startingWidth
@@ -51,7 +50,7 @@ class WordSearchInfo:
         for letter in word:
 
             # 2D
-            if startingDepth == 0 and self.wordSearch[nextWordSearchHeightIndex][nextWordSearchWidthIndex] == letter:
+            if startingDepth == -1 and self.wordSearch[nextWordSearchHeightIndex][nextWordSearchWidthIndex] == letter:
                 foundWord = True
 
             # 3D
