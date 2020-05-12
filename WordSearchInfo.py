@@ -51,12 +51,14 @@ class WordSearchInfo:
         for i,letter in enumerate(word):
 
             # 2D
-            if startingDepth == 'default' and self.wordSearch[nextWordSearchHeightIndex][nextWordSearchWidthIndex] != wordList[word][i]:
-                foundWord = False
-                break
+            if startingDepth == 'default' and self.wordSearch[nextWordSearchHeightIndex][nextWordSearchWidthIndex] == wordList[word][i]:
+                foundWord = True
 
             # 3D
-            elif self.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][nextWordSearchWidthIndex] != wordList[word][i]:
+            elif self.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == wordList[word][i]:
+                foundWord = True
+                
+            else:
                 foundWord = False
                 break
            
