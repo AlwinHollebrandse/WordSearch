@@ -12,10 +12,8 @@ def main():
         print('wordSearchGridMultiplier must be greater than 1')
         return
     directions = ['right', 'rightDown', 'down', 'leftDown', 'left', 'leftUp', 'up', 'rightUp']
-    wordListFile = open('WordSearchWords.txt','r+')
-    wordSearchFile = open('WordSearch.txt','w+')
-    wordList = [line.rstrip('\n').upper() for line in wordListFile]
-    wordListFile.close()
+    with open('WordSearchWords.txt','r+') as wordListFile:
+        wordList = [line.rstrip('\n').upper() for line in wordListFile]
 
     # set up size of wordSeach
     maxWordLength = len(max(wordList, key = len))
@@ -42,8 +40,8 @@ def main():
 
     fillRestOfWordSearch(wordSearchInfo)
     wordSearchInfo.printWordSearch()
-    # wordSearchInfo.printWordSearchToFile(wordSearchFile)
-    wordSearchFile.close()
+    # with open('WordSearch.txt','w+') as wordSearchFile:     
+        # wordSearchInfo.printWordSearchToFile(wordSearchFile)
     # TODO convert to JSON
 
 
@@ -139,37 +137,38 @@ def tryWord(word, height, width, directions, wordSearchInfo): # TODO depth
     for direction in directions:
         if not wordAdded:
             usedDirection = direction
+
             if direction == 'right':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'right',
-                        startingHeight = height, startingWidth = width, heightChange = 0, widthChange = 1)
+                    startingHeight = height, startingWidth = width, heightChange = 0, widthChange = 1)
 
             elif direction == 'rightDown':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightDown',
-                        startingHeight = height, startingWidth = width, heightChange = 1, widthChange = 1)
+                    startingHeight = height, startingWidth = width, heightChange = 1, widthChange = 1)
 
             elif direction == 'down':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'down',
-                        startingHeight = height, startingWidth = width, heightChange = 1, widthChange = 0)
+                    startingHeight = height, startingWidth = width, heightChange = 1, widthChange = 0)
 
             elif direction == 'leftDown':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'leftDown',
-                        startingHeight = height, startingWidth = width, heightChange = 1, widthChange = -1)
+                    startingHeight = height, startingWidth = width, heightChange = 1, widthChange = -1)
 
             elif direction == 'left':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'left',
-                        startingHeight = height, startingWidth = width, heightChange = 0, widthChange = -1)
+                    startingHeight = height, startingWidth = width, heightChange = 0, widthChange = -1)
 
             elif direction == 'leftUp':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'leftUp',
-                        startingHeight = height, startingWidth = width, heightChange = -1, widthChange = -1)
+                    startingHeight = height, startingWidth = width, heightChange = -1, widthChange = -1)
 
             elif direction == 'up':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'up',
-                        startingHeight = height, startingWidth = width, heightChange = -1, widthChange = 0)
+                    startingHeight = height, startingWidth = width, heightChange = -1, widthChange = 0)
 
             elif direction == 'rightUp':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightUp',
-                        startingHeight = height, startingWidth = width, heightChange = -1, widthChange = 1)
+                    startingHeight = height, startingWidth = width, heightChange = -1, widthChange = 1)
         else:
             break
 

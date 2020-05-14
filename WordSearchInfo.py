@@ -19,10 +19,9 @@ class WordSearchInfo:
             self.openWordSearchSpaces = []
 
 
-
     def toString(self):
-        print("wordSearchHeight:", self.wordSearchHeight, ", wordSearchWidth:", self.wordSearchWidth,
-            ", wordSearchDepth:", self.wordSearchDepth, ", wordSearchSize:", self.wordSearchSize,
+        print("wordSearchDepth:", self.wordSearchDepth, ", wordSearchHeight:", self.wordSearchHeight,
+            ", wordSearchWidth:", self.wordSearchWidth, ", wordSearchSize:", self.wordSearchSize,
             "\nwordList:", self.wordList,
             "\nopenWordSearchSpaces:", self.openWordSearchSpaces)
         self.printWordSearch()
@@ -195,4 +194,4 @@ class WordSearchInfo:
 
         # check the right, up direction
         if direction == "rightUpIn":
-            return nextWordSearchDepthIndex + 1 < self.wordSearchDepth and nextWordSearchHeightIndex - 1 >= 0 and nextWordSearchWidthIndex + 1 < self.nextWordSearchWidthIndex
+            return nextWordSearchDepthIndex + 1 < self.wordSearchDepth and nextWordSearchHeightIndex - 1 >= 0 and nextWordSearchWidthIndex + 1 < self.wordSearchWidth
