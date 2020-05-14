@@ -29,48 +29,47 @@ def main():
 def checkForWord(height, width, wordSearchInfo, wordList, foundWordSet):
     for word in reversed(wordList): # for each word in the wordList, itereted backwards so that things can be popped cleanly  
         directionsFoundIn = []
-        foundWord = False
 
         if wordSearchInfo.wordSearch[height][width] == word[0]: 
 
             # check the right direction
             if width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[height][width + 1] == word[1]:
-                wordSearchInfo.checkWordInDirection(foundWord = foundWord, word = word, direction = 'right', directionsFoundIn = directionsFoundIn, 
+                wordSearchInfo.checkWordInDirection(word = word, direction = 'right', directionsFoundIn = directionsFoundIn, 
                     startingHeight = height, startingWidth = width, heightChange = 0, widthChange = 1)
 
             # check the right, down direction
             if height + 1 < wordSearchInfo.wordSearchHeight and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[height + 1][width + 1] == word[1]:
-                wordSearchInfo.checkWordInDirection(foundWord = foundWord, word = word, direction = 'rightDown', directionsFoundIn = directionsFoundIn, 
+                wordSearchInfo.checkWordInDirection(word = word, direction = 'rightDown', directionsFoundIn = directionsFoundIn, 
                     startingHeight = height, startingWidth = width, heightChange = 1, widthChange = 1)
 
             # check the down direction
             if height + 1 < wordSearchInfo.wordSearchHeight and wordSearchInfo.wordSearch[height + 1][width] == word[1]:
-                wordSearchInfo.checkWordInDirection(foundWord = foundWord, word = word, direction = 'down', directionsFoundIn = directionsFoundIn, 
+                wordSearchInfo.checkWordInDirection(word = word, direction = 'down', directionsFoundIn = directionsFoundIn, 
                     startingHeight = height, startingWidth = width, heightChange = 1, widthChange = 0)
 
             # check the left, down direction
             if height + 1 < wordSearchInfo.wordSearchHeight and width - 1 >= 0 and wordSearchInfo.wordSearch[height + 1][width - 1] == word[1]:
-                wordSearchInfo.checkWordInDirection(foundWord = foundWord, word = word, direction = 'leftDown', directionsFoundIn = directionsFoundIn, 
+                wordSearchInfo.checkWordInDirection(word = word, direction = 'leftDown', directionsFoundIn = directionsFoundIn, 
                     startingHeight = height, startingWidth = width, heightChange = 1, widthChange = -1)
 
             # check the left direction
             if width - 1 >= 0 and wordSearchInfo.wordSearch[height][width - 1] == word[1]:
-                wordSearchInfo.checkWordInDirection(foundWord = foundWord, word = word, direction = 'left', directionsFoundIn = directionsFoundIn, 
+                wordSearchInfo.checkWordInDirection(word = word, direction = 'left', directionsFoundIn = directionsFoundIn, 
                     startingHeight = height, startingWidth = width, heightChange = 0, widthChange = -1)
 
             # check the left up direction
             if height - 1 >= 0 and width - 1 >= 0 and wordSearchInfo.wordSearch[height - 1][width - 1] == word[1]:
-                wordSearchInfo.checkWordInDirection(foundWord = foundWord, word = word, direction = 'leftUp', directionsFoundIn = directionsFoundIn, 
+                wordSearchInfo.checkWordInDirection(word = word, direction = 'leftUp', directionsFoundIn = directionsFoundIn, 
                     startingHeight = height, startingWidth = width, heightChange = -1, widthChange = -1)
 
             # check the up direction
             if height - 1 >= 0 and wordSearchInfo.wordSearch[height - 1][width] == word[1]:
-                wordSearchInfo.checkWordInDirection(foundWord = foundWord, word = word, direction = 'up', directionsFoundIn = directionsFoundIn, 
+                wordSearchInfo.checkWordInDirection(word = word, direction = 'up', directionsFoundIn = directionsFoundIn, 
                     startingHeight = height, startingWidth = width, heightChange = -1, widthChange = 0)
 
             # check the right, up direction
             if height - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[height - 1][width + 1] == word[1]:
-                wordSearchInfo.checkWordInDirection(foundWord = foundWord, word = word, direction = 'rightUp', directionsFoundIn = directionsFoundIn, 
+                wordSearchInfo.checkWordInDirection(word = word, direction = 'rightUp', directionsFoundIn = directionsFoundIn, 
                     startingHeight = height, startingWidth = width, heightChange = -1, widthChange = 1)
 
 
