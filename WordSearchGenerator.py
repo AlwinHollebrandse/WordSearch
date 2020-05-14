@@ -2,7 +2,7 @@ import random
 import math
 from WordSearchInfo import WordSearchInfo
 
-# TODO are teh 2D versions needed? Check if a depth of 1 makes the 2D versions work instead
+# TODO are the 2D versions needed? Check if a depth of 1 makes the 2D versions work instead
 
 def main():
     print('generating the word search')
@@ -22,11 +22,9 @@ def main():
     sumOfWordLengths = len(''.join(wordList))
     nearestSquare = findNearestSquare(sumOfWordLengths)
     wordSearchMinLength = max(maxWordLength, nearestSquare) + 1 # done to increase the odds of a succesful createWordSearch() due to a better fitting wordSearch
-    print('maxWordLength:', maxWordLength, ', sumOfWordLengths:', sumOfWordLengths, ', nearestSquare:', nearestSquare, ', wordSearchMinLength:', wordSearchMinLength)
     wordSearchDepth = 1
     wordSearchHeight = random.randint(wordSearchMinLength, (wordSearchGridMultiplier * wordSearchMinLength))
     wordSearchWidth = random.randint(wordSearchMinLength, (wordSearchGridMultiplier * wordSearchMinLength))
-    print('wordSearchDepth:', wordSearchDepth, 'wordSearchHeight:', wordSearchHeight, ', wordSearchWidth:', wordSearchWidth)
 
     wordSearchInfo = WordSearchInfo(wordSearchHeight = wordSearchHeight, wordSearchWidth = wordSearchWidth, 
         wordSearchDepth = wordSearchDepth, wordList = wordList)
@@ -59,10 +57,9 @@ def fillRestOfWordSearch(wordSearchInfo):
 
 
 def addWord(heightChange, widthChange, nextWordSearchHeightIndex, nextWordSearchWidthIndex, word, wordSearchInfo):
-    # dont need to check if the space exists in wordSearch, as tryWord does that
-    for letter in word: # add the word to the word Search
-        wordSearchInfo.wordSearch[nextWordSearchHeightIndex][nextWordSearchWidthIndex] = letter # update the correct spot in wordSearch
-        nextOpenSpace = (wordSearchInfo.wordSearchWidth * nextWordSearchHeightIndex) + nextWordSearchWidthIndex # remove said spot from openWordSearchSpaces
+    for letter in word:
+        wordSearchInfo.wordSearch[nextWordSearchHeightIndex][nextWordSearchWidthIndex] = letter
+        nextOpenSpace = (wordSearchInfo.wordSearchWidth * nextWordSearchHeightIndex) + nextWordSearchWidthIndex
         if nextOpenSpace in wordSearchInfo.openWordSearchSpaces:
             wordSearchInfo.openWordSearchSpaces.remove(nextOpenSpace)
         nextWordSearchHeightIndex += heightChange
@@ -77,8 +74,6 @@ def getCandidatePosition(wordSearchInfo):
         candidatePosition = random.choice(wordSearchInfo.openWordSearchSpaces)
         candidatePositionHeight = candidatePosition // wordSearchInfo.wordSearchWidth
         candidatePositionWidth = candidatePosition % wordSearchInfo.wordSearchWidth
-        # print(candidatePosition, candidatePositionHeight, candidatePositionWidth)
-        # wordSearchInfo.toString()
         if wordSearchInfo.wordSearch[candidatePositionHeight][candidatePositionWidth] != 'a':
             wordSearchInfo.openWordSearchSpaces.remove(candidatePosition)
             continue
@@ -86,10 +81,6 @@ def getCandidatePosition(wordSearchInfo):
 
 
 def findNearestSquare(goal):
-    # i = 1
-    # while i * i < goal:
-    #     i += 1
-    # return i
     return math.ceil(math.sqrt(goal))
 
 
@@ -116,143 +107,74 @@ def createWordSearch(wordList, wordSearchInfo, directions):
     return False
 
 
-# # TODO add depth
-# def tryWordInDirection(wordSearchInfo, word, direction, startingHeight, startingWidth, heightChange, widthChange, startingDepth = -1, depthChange = 0):
-#     nextWordSearchDepthIndex = startingDepth
-#     nextWordSearchHeightIndex = startingHeight
-#     nextWordSearchWidthIndex = startingWidth
-#     directionWorks = True
+# TODO add depth
+def tryWordInDirection(wordSearchInfo, word, direction, startingHeight, startingWidth, heightChange, widthChange, startingDepth = -1, depthChange = 0):
+    nextWordSearchDepthIndex = startingDepth
+    nextWordSearchHeightIndex = startingHeight
+    nextWordSearchWidthIndex = startingWidth
+    directionWorks = True
 
-#     for letter in word[1:]:
-#         if directionCheck(wordSearchInfo, direction, nextWordSearchDepthIndex, nextWordSearchHeightIndex, nextWordSearchWidthIndex) and wordSearchInfo.wordSearch[nextWordSearchHeightIndex + heightChange][nextWordSearchWidthIndex + widthChange] == 0: ## TODO depth
-#             nextWordSearchDepthIndex += depthChange
-#             nextWordSearchHeightIndex += heightChange
-#             nextWordSearchWidthIndex += widthChange
-#         else:
-#             directionWorks = False
-#             break
-#     if directionWorks:
-#         addWord(heightChange, widthChange, startingHeight, startingWidth, word, wordSearchInfo) # TODO starting depth
-#         return True
-#     return False
+    for letter in word[1:]:
+        nextSpotExists = wordSearchInfo.directionCheck(direction, nextWordSearchDepthIndex, nextWordSearchHeightIndex, nextWordSearchWidthIndex)
+        if nextSpotExists and wordSearchInfo.wordSearch[nextWordSearchHeightIndex + heightChange][nextWordSearchWidthIndex + widthChange] == 'a': # TODO depth
+            nextWordSearchDepthIndex += depthChange
+            nextWordSearchHeightIndex += heightChange
+            nextWordSearchWidthIndex += widthChange
+        else:
+            directionWorks = False
+            break
+    if directionWorks:
+        addWord(heightChange, widthChange, startingHeight, startingWidth, word, wordSearchInfo) # TODO starting depth
+        return True
+    return False
     
 
 def tryWord(word, height, width, directions, wordSearchInfo): # TODO depth
     # TODO add a check in try word to see if instead of '0', if the character in wordSearch[height][width] is already the 2nd character of the word. To increase overlap potential
-    # candidatePositionHeight = candidatePosition // wordSearchInfo.wordSearchWidth
-    # candidatePositionWidth = candidatePosition % wordSearchInfo.wordSearchWidth
-    
-    candidatePositionHeight = height
-    candidatePositionWidth = width
-
     # get direction to try
     random.shuffle(directions)
-    directionWorks = True
+    wordAdded = False
+    usedDirection = None
+
     for direction in directions:
-        directionWorks = True
+        if not wordAdded:
+            usedDirection = direction
+            if direction == 'right':
+                wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'right',
+                        startingHeight = height, startingWidth = width, heightChange = 0, widthChange = 1)
 
-        # TODO remove
-        candidatePositionHeightCopy = candidatePositionHeight
-        candidatePositionWidthCopy = candidatePositionWidth
+            elif direction == 'rightDown':
+                wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightDown',
+                        startingHeight = height, startingWidth = width, heightChange = 1, widthChange = 1)
 
-        if direction == 'right':
-            # wordSearchInfo.tryWordInDirection(word = word, direction = 'right',
-            #         startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = 0, widthChange = 1)
+            elif direction == 'down':
+                wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'down',
+                        startingHeight = height, startingWidth = width, heightChange = 1, widthChange = 0)
 
+            elif direction == 'leftDown':
+                wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'leftDown',
+                        startingHeight = height, startingWidth = width, heightChange = 1, widthChange = -1)
 
-            for letter in word[1:]:
-                if candidatePositionWidthCopy + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[candidatePositionHeightCopy][candidatePositionWidthCopy + 1] == 'a':
-                    candidatePositionWidthCopy += 1
-                else:
-                    directionWorks = False
-                    break
-            if directionWorks:
-                addWord(0, 1, candidatePositionHeight, candidatePositionWidth, word, wordSearchInfo)
-                break
-                    
-        elif direction == 'rightDown':
-            for letter in word[1:]:
-                if candidatePositionHeightCopy + 1 < wordSearchInfo.wordSearchHeight and candidatePositionWidthCopy + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[candidatePositionHeightCopy + 1][candidatePositionWidthCopy + 1] == 'a':
-                    candidatePositionHeightCopy += 1
-                    candidatePositionWidthCopy += 1
-                else:
-                    directionWorks = False
-                    break
-            if directionWorks:
-                addWord(1, 1, candidatePositionHeight, candidatePositionWidth, word, wordSearchInfo)
-                break
+            elif direction == 'left':
+                wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'left',
+                        startingHeight = height, startingWidth = width, heightChange = 0, widthChange = -1)
 
-        elif direction == 'down':
-            for letter in word[1:]:
-                if candidatePositionHeightCopy + 1 < wordSearchInfo.wordSearchHeight and wordSearchInfo.wordSearch[candidatePositionHeightCopy + 1][candidatePositionWidthCopy] == 'a':
-                    candidatePositionHeightCopy += 1
-                else:
-                    directionWorks = False
-                    break
-            if directionWorks:
-                addWord(1, 0, candidatePositionHeight, candidatePositionWidth, word, wordSearchInfo)
-                break
+            elif direction == 'leftUp':
+                wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'leftUp',
+                        startingHeight = height, startingWidth = width, heightChange = -1, widthChange = -1)
 
-        elif direction == 'leftDown':
-            for letter in word[1:]:
-                if candidatePositionHeightCopy + 1 < wordSearchInfo.wordSearchHeight and candidatePositionWidthCopy - 1 >= 0 and wordSearchInfo.wordSearch[candidatePositionHeightCopy + 1][candidatePositionWidthCopy - 1] == 'a':
-                    candidatePositionHeightCopy += 1
-                    candidatePositionWidthCopy += -1
-                else:
-                    directionWorks = False
-                    break
-            if directionWorks:
-                addWord(1, -1, candidatePositionHeight, candidatePositionWidth, word, wordSearchInfo)
-                break
+            elif direction == 'up':
+                wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'up',
+                        startingHeight = height, startingWidth = width, heightChange = -1, widthChange = 0)
 
-        elif direction == 'left':
-            for letter in word[1:]:
-                if candidatePositionWidthCopy - 1 >= 0 and wordSearchInfo.wordSearch[candidatePositionHeightCopy][candidatePositionWidthCopy - 1] == 'a':
-                    candidatePositionWidthCopy += -1
-                else:
-                    directionWorks = False
-                    break
-            if directionWorks:
-                addWord(0, -1, candidatePositionHeight, candidatePositionWidth, word, wordSearchInfo)
-                break
+            elif direction == 'rightUp':
+                wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightUp',
+                        startingHeight = height, startingWidth = width, heightChange = -1, widthChange = 1)
+        else:
+            break
 
-        elif direction == 'leftUp':
-            for letter in word[1:]:
-                if candidatePositionHeightCopy - 1 >= 0 and candidatePositionWidthCopy - 1 >=0 and wordSearchInfo.wordSearch[candidatePositionHeightCopy - 1][candidatePositionWidthCopy - 1] == 'a':
-                    candidatePositionHeightCopy += -1
-                    candidatePositionWidthCopy += -1
-                else:
-                    directionWorks = False
-                    break
-            if directionWorks:
-                addWord(-1, -1, candidatePositionHeight, candidatePositionWidth, word, wordSearchInfo)
-                break
-
-        elif direction == 'up':
-            for letter in word[1:]:
-                if candidatePositionHeightCopy - 1 >= 0 and wordSearchInfo.wordSearch[candidatePositionHeightCopy - 1][candidatePositionWidthCopy] == 'a':
-                    candidatePositionHeightCopy += -1
-                else:
-                    directionWorks = False
-                    break
-            if directionWorks:
-                addWord(-1, 0, candidatePositionHeight, candidatePositionWidth, word, wordSearchInfo)
-                break
-            
-        elif direction == 'rightUp':
-            for letter in word[1:]:
-                if candidatePositionHeightCopy - 1 >= 0 and candidatePositionWidthCopy + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[candidatePositionHeightCopy - 1][candidatePositionWidthCopy + 1] == 'a':
-                    candidatePositionHeightCopy += -1
-                    candidatePositionWidthCopy += 1
-                else:
-                    directionWorks = False
-                    break
-            if directionWorks:
-                addWord(-1, 1, candidatePositionHeight, candidatePositionWidth, word, wordSearchInfo)
-                break
-
-    if directionWorks:
-        print('added ', word, ' at position [', candidatePositionHeight, '][', candidatePositionWidth, '] in the ', direction, ' direction')
+    if wordAdded:
+        print('added ', word, ' at position [', height, '][', width, '] in the ', usedDirection, ' direction')
         return True
     else:
         return False

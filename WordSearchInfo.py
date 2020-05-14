@@ -66,28 +66,6 @@ class WordSearchInfo:
                     print(*self.wordSearch[k][j], file=wordSearchFile)
                 print('\n', file=wordSearchFile)
 
-
-
-    # # TODO add depth
-    # def tryWordInDirection(self, word, direction, startingHeight, startingWidth, heightChange, widthChange, startingDepth = -1, depthChange = 0):
-    #     nextWordSearchDepthIndex = startingDepth
-    #     nextWordSearchHeightIndex = startingHeight
-    #     nextWordSearchWidthIndex = startingWidth
-    #     directionWorks = True
-
-    #     for letter in word[1:]:
-    #         if directionCheck(self, direction, nextWordSearchDepthIndex, nextWordSearchHeightIndex, nextWordSearchWidthIndex) and self.wordSearch[nextWordSearchHeightIndex + heightChange][nextWordSearchWidthIndex + widthChange] == 'a': ## TODO depth
-    #             nextWordSearchDepthIndex += depthChange
-    #             nextWordSearchHeightIndex += heightChange
-    #             nextWordSearchWidthIndex += widthChange
-    #         else:
-    #             directionWorks = False
-    #             break
-    #     if directionWorks:
-    #         addWord(heightChange, widthChange, startingHeight, startingWidth, word, self) # TODO starting depth
-    #         return True
-    #     return False
-
         
     # TODO if 3D depth = 1 then this could move to the solver file
     def checkWordInDirection(self, word, direction, directionsFoundIn, startingHeight, startingWidth, heightChange, widthChange, startingDepth = -1, depthChange = 0):
