@@ -98,116 +98,116 @@ def checkWordInDirection(wordSearchInfo, word, direction, directionsFoundIn, sta
 
 
 def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
-    for word in reversed(wordList): # for each word in the wordList, itereted backwards so that things can be popped cleanly  
+    for word in wordList:
         directionsFoundIn = []
 
-        if wordSearchInfo.wordSearch[depth][height][width] == word[0]:      
+        if wordSearchInfo.wordSearch[depth][height][width] == word[0]:  
 
         # depth does not change
             if width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth][height][width + 1] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'right', directionsFoundIn = directionsFoundIn, 
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'right', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = 0, widthChange = 1)
 
-            elif height + 1 < wordSearchInfo.wordSearchHeight and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth][height + 1][width + 1] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'rightDown', directionsFoundIn = directionsFoundIn, 
+            if height + 1 < wordSearchInfo.wordSearchHeight and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth][height + 1][width + 1] == word[1]:
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightDown', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = 1, widthChange = 1)
 
-            elif height + 1 < wordSearchInfo.wordSearchHeight and wordSearchInfo.wordSearch[depth][height + 1][width] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'down', directionsFoundIn = directionsFoundIn, 
+            if height + 1 < wordSearchInfo.wordSearchHeight and wordSearchInfo.wordSearch[depth][height + 1][width] == word[1]:
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'down', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = 1, widthChange = 0)
 
-            elif height + 1 < wordSearchInfo.wordSearchHeight and width - 1 >= 0 and wordSearchInfo.wordSearch[depth][height + 1][width - 1] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'leftDown', directionsFoundIn = directionsFoundIn, 
+            if height + 1 < wordSearchInfo.wordSearchHeight and width - 1 >= 0 and wordSearchInfo.wordSearch[depth][height + 1][width - 1] == word[1]:
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'leftDown', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = 1, widthChange = -1)
 
-            elif width - 1 >= 0 and wordSearchInfo.wordSearch[depth][height][width - 1] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'left', directionsFoundIn = directionsFoundIn, 
+            if width - 1 >= 0 and wordSearchInfo.wordSearch[depth][height][width - 1] == word[1]:
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'left', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = 0, widthChange = -1)
 
-            elif height - 1 >= 0 and width - 1 >= 0 and wordSearchInfo.wordSearch[depth][height - 1][width - 1] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'leftUp', directionsFoundIn = directionsFoundIn, 
+            if height - 1 >= 0 and width - 1 >= 0 and wordSearchInfo.wordSearch[depth][height - 1][width - 1] == word[1]:
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'leftUp', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = -1, widthChange = -1)
 
-            elif height - 1 >= 0 and wordSearchInfo.wordSearch[depth][height - 1][width] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'up', directionsFoundIn = directionsFoundIn, 
+            if height - 1 >= 0 and wordSearchInfo.wordSearch[depth][height - 1][width] == word[1]:
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'up', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = -1, widthChange = 0)
 
-            elif height - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth][height - 1][width + 1] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'rightUp', directionsFoundIn = directionsFoundIn, 
+            if height - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth][height - 1][width + 1] == word[1]:
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightUp', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = -1, widthChange = 1)
 
         # depth goes out (to the user)
-            elif depth - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth - 1][height][width + 1] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'rightOut', directionsFoundIn = directionsFoundIn, 
+            if depth - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth - 1][height][width + 1] == word[1]:
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightOut', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = 0, widthChange = 1)
 
-            elif depth - 1 >= 0 and height + 1 < wordSearchInfo.wordSearchHeight and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth - 1][height + 1][width + 1] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'rightDownOut', directionsFoundIn = directionsFoundIn, 
+            if depth - 1 >= 0 and height + 1 < wordSearchInfo.wordSearchHeight and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth - 1][height + 1][width + 1] == word[1]:
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightDownOut', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = 1, widthChange = 1)
 
-            elif depth - 1 >= 0 and height + 1 < wordSearchInfo.wordSearchHeight and wordSearchInfo.wordSearch[depth - 1][height + 1][width] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'downOut', directionsFoundIn = directionsFoundIn, 
+            if depth - 1 >= 0 and height + 1 < wordSearchInfo.wordSearchHeight and wordSearchInfo.wordSearch[depth - 1][height + 1][width] == word[1]:
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'downOut', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = 1, widthChange = 0)
 
-            elif depth - 1 >= 0 and height + 1 < wordSearchInfo.wordSearchHeight and width - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height + 1][width - 1] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'leftDownOut', directionsFoundIn = directionsFoundIn, 
+            if depth - 1 >= 0 and height + 1 < wordSearchInfo.wordSearchHeight and width - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height + 1][width - 1] == word[1]:
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'leftDownOut', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = 1, widthChange = -1)
 
-            elif depth - 1 >= 0 and  width - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height][width - 1] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'leftOut', directionsFoundIn = directionsFoundIn, 
+            if depth - 1 >= 0 and  width - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height][width - 1] == word[1]:
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'leftOut', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = 0, widthChange = -1)
 
-            elif depth - 1 >= 0 and  height - 1 >= 0 and width - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height - 1][width - 1] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'leftUpOut', directionsFoundIn = directionsFoundIn, 
+            if depth - 1 >= 0 and  height - 1 >= 0 and width - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height - 1][width - 1] == word[1]:
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'leftUpOut', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = -1, widthChange = -1)
 
-            elif depth - 1 >= 0 and  height - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height - 1][width] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'upOut', directionsFoundIn = directionsFoundIn, 
+            if depth - 1 >= 0 and  height - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height - 1][width] == word[1]:
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'upOut', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = -1, widthChange = 0)
 
-            elif depth - 1 >= 0 and height - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth - 1][height - 1][width + 1] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'rightUpOut', directionsFoundIn = directionsFoundIn, 
+            if depth - 1 >= 0 and height - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth - 1][height - 1][width + 1] == word[1]:
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightUpOut', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = -1, widthChange = 1)
 
-            elif depth - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height][width] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'out', directionsFoundIn = directionsFoundIn, 
+            if depth - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height][width] == word[1]:
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'out', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = 0, widthChange = 0)
 
         # depth goes in (away from user)
-            elif depth + 1 < wordSearchInfo.wordSearchDepth and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth + 1][height][width + 1] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'rightIn', directionsFoundIn = directionsFoundIn, 
+            if depth + 1 < wordSearchInfo.wordSearchDepth and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth + 1][height][width + 1] == word[1]:
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightIn', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = 0, widthChange = 1)
             
-            elif depth + 1 < wordSearchInfo.wordSearchDepth and height + 1 < wordSearchInfo.wordSearchHeight and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth + 1][height + 1][width + 1] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'rightDownIn', directionsFoundIn = directionsFoundIn, 
+            if depth + 1 < wordSearchInfo.wordSearchDepth and height + 1 < wordSearchInfo.wordSearchHeight and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth + 1][height + 1][width + 1] == word[1]:
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightDownIn', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = 1, widthChange = 1)
 
-            elif depth + 1 < wordSearchInfo.wordSearchDepth and height + 1 < wordSearchInfo.wordSearchHeight and wordSearchInfo.wordSearch[depth + 1][height + 1][width] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'downIn', directionsFoundIn = directionsFoundIn, 
+            if depth + 1 < wordSearchInfo.wordSearchDepth and height + 1 < wordSearchInfo.wordSearchHeight and wordSearchInfo.wordSearch[depth + 1][height + 1][width] == word[1]:
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'downIn', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = 1, widthChange = 0)
 
-            elif depth + 1 < wordSearchInfo.wordSearchDepth and height + 1 < wordSearchInfo.wordSearchHeight and width - 1 >= 0 and wordSearchInfo.wordSearch[depth + 1][height + 1][width - 1] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'leftDownIn', directionsFoundIn = directionsFoundIn, 
+            if depth + 1 < wordSearchInfo.wordSearchDepth and height + 1 < wordSearchInfo.wordSearchHeight and width - 1 >= 0 and wordSearchInfo.wordSearch[depth + 1][height + 1][width - 1] == word[1]:
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'leftDownIn', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = 1, widthChange = -1)
 
-            elif depth + 1 < wordSearchInfo.wordSearchDepth and  width - 1 >= 0 and wordSearchInfo.wordSearch[depth + 1][height][width - 1] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'leftIn', directionsFoundIn = directionsFoundIn, 
+            if depth + 1 < wordSearchInfo.wordSearchDepth and  width - 1 >= 0 and wordSearchInfo.wordSearch[depth + 1][height][width - 1] == word[1]:
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'leftIn', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = 0, widthChange = -1)
 
-            elif depth + 1 < wordSearchInfo.wordSearchDepth and  height - 1 >= 0 and width - 1 >= 0 and wordSearchInfo.wordSearch[depth + 1][height - 1][width - 1] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'leftUpIn', directionsFoundIn = directionsFoundIn, 
+            if depth + 1 < wordSearchInfo.wordSearchDepth and  height - 1 >= 0 and width - 1 >= 0 and wordSearchInfo.wordSearch[depth + 1][height - 1][width - 1] == word[1]:
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'leftUpIn', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = -1, widthChange = -1)
 
-            elif depth + 1 < wordSearchInfo.wordSearchDepth and  height - 1 >= 0 and wordSearchInfo.wordSearch[depth + 1][height - 1][width] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'upIn', directionsFoundIn = directionsFoundIn, 
+            if depth + 1 < wordSearchInfo.wordSearchDepth and  height - 1 >= 0 and wordSearchInfo.wordSearch[depth + 1][height - 1][width] == word[1]:
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'upIn', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = -1, widthChange = 0)
 
-            elif depth + 1 < wordSearchInfo.wordSearchDepth and height - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth + 1][height - 1][width + 1] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'rightUpIn', directionsFoundIn = directionsFoundIn, 
+            if depth + 1 < wordSearchInfo.wordSearchDepth and height - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth + 1][height - 1][width + 1] == word[1]:
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightUpIn', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = -1, widthChange = 1)
 
-            elif depth + 1 < wordSearchInfo.wordSearchDepth and wordSearchInfo.wordSearch[depth + 1][height][width] == word[1]:
-                wordSearchInfo.checkWordInDirection(word = word, direction = 'in', directionsFoundIn = directionsFoundIn, 
+            if depth + 1 < wordSearchInfo.wordSearchDepth and wordSearchInfo.wordSearch[depth + 1][height][width] == word[1]:
+                checkWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'in', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = 0, widthChange = 0)
 
         for direction in directionsFoundIn:

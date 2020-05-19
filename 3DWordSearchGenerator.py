@@ -156,8 +156,6 @@ def tryWord(word, depth, height, width, directions, wordSearchInfo):
         else:
             usedDirection = direction
 
-            # TODO change to swtich case? for 3 files
-
         # depth does not change
             if direction == 'right':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'right',
