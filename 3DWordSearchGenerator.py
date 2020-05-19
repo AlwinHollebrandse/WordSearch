@@ -9,7 +9,7 @@ def main():
 
     print('generating the word search')
     # TODO add the ability to read files from a CLI
-    wordSearchGridMultiplier = 2 # the larger this number is, the more likely that every  word gets added
+    wordSearchGridMultiplier = 2 # the larger this number is, the more likely that every  word gets added # TODO get from front end
     if wordSearchGridMultiplier < 1:
         print('wordSearchGridMultiplier must be greater than 1')
         return
@@ -151,8 +151,12 @@ def tryWord(word, depth, height, width, directions, wordSearchInfo):
     usedDirection = None
 
     for direction in directions:
-        if not wordAdded:
+        if wordAdded:
+            break
+        else:
             usedDirection = direction
+
+            # TODO change to swtich case? for 3 files
 
         # depth does not change
             if direction == 'right':
@@ -164,7 +168,7 @@ def tryWord(word, depth, height, width, directions, wordSearchInfo):
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = 1, widthChange = 1)
 
             elif direction == 'down':
-                wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightDown',
+                wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'down',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = 1, widthChange = 0)
                 
             elif direction == 'leftDown':
@@ -197,7 +201,7 @@ def tryWord(word, depth, height, width, directions, wordSearchInfo):
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = 1, widthChange = 1)
 
             elif direction == 'downOut':
-                wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightDownOut',
+                wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'downOut',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = 1, widthChange = 0)
                 
             elif direction == 'leftDownOut':
@@ -234,7 +238,7 @@ def tryWord(word, depth, height, width, directions, wordSearchInfo):
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = 1, widthChange = 1)
 
             elif direction == 'downIn':
-                wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightDownIn',
+                wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'downIn',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = 1, widthChange = 0)
                 
             elif direction == 'leftDownIn':
@@ -260,11 +264,9 @@ def tryWord(word, depth, height, width, directions, wordSearchInfo):
             elif direction == 'in':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'in',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = 0, widthChange = 0)
-        else:
-            break
 
     if wordAdded:
-        print('added ', word, ' at position [', depth, '][', height, '][', width, '] in the ', direction, ' direction')
+        print('added ', word, ' at position [', depth, '][', height, '][', width, '] in the ', usedDirection, ' direction')
         return True
     else:
         return False
