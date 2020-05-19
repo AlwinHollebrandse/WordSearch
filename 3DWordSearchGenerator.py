@@ -3,7 +3,6 @@ import math
 from WordSearchInfo import WordSearchInfo
 
 # was 449 lines
-# TODO missing pure 'IN' and 'OUT' directions
 
 def main():
     twoDimensional = False # TODO get from front end. depth = 1 == 2D
@@ -23,6 +22,7 @@ def main():
     nearestCube = findNearestCube(sumOfWordLengths)
     wordSearchMinLength = max(maxWordLength, nearestCube) + 1 # done to increase the odds of a succesful createWordSearch() due to a better fitting wordSearch
 
+    # TODO add front end option to pick which directions to allow
     if (twoDimensional):
         directions = ['right', 'rightDown', 'down', 'leftDown', 'left', 'leftUp', 'up', 'rightUp']
         wordSearchDepth = 1
@@ -51,8 +51,8 @@ def main():
 
     fillRestOfWordSearch(wordSearchInfo)
     wordSearchInfo.printWordSearch()
-    # with open('WordSearch.txt','w+') as wordSearchFile:     
-        # wordSearchInfo.printWordSearchToFile(wordSearchFile)
+    with open('WordSearch.txt','w+') as wordSearchFile:     
+        wordSearchInfo.printWordSearchToFile(wordSearchFile)
     # TODO convert to JSON
 
 
@@ -63,7 +63,7 @@ def fillRestOfWordSearch(wordSearchInfo):
             for i in range(wordSearchInfo.wordSearchWidth):
                 if wordSearchInfo.wordSearch[k][j][i] == 'a':
                     randomLetter = random.choice(LETTERS)
-                    wordSearchInfo.wordSearch[k][j][i]=randomLetter
+                    wordSearchInfo.wordSearch[k][j][i] = randomLetter
 
 
 def addWord(depthChange, heightChange, widthChange, nextWordSearchDepthIndex, nextWordSearchHeightIndex, nextWordSearchWidthIndex, word, wordSearchInfo):
@@ -122,7 +122,7 @@ def createWordSearch(wordList, wordSearchInfo, directions):
 
 
 
-def tryWordInDirection(wordSearchInfo, word, direction, startingHeight, startingWidth, heightChange, widthChange, startingDepth = -1, depthChange = 0):
+def tryWordInDirection(wordSearchInfo, word, direction, startingDepth, startingHeight, startingWidth, depthChange, heightChange, widthChange):
     nextWordSearchDepthIndex = startingDepth
     nextWordSearchHeightIndex = startingHeight
     nextWordSearchWidthIndex = startingWidth

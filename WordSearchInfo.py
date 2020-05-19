@@ -9,10 +9,7 @@ class WordSearchInfo:
         self.wordSearchSize = wordSearchHeight * wordSearchWidth * wordSearchDepth
 
         if len(wordSearch) == 0:
-            if self.wordSearchDepth == 1: # 2D TODO remove and fix resulting issues
-                self.wordSearch = np.array([['a' for i in range(wordSearchWidth)] for j in range(wordSearchHeight)])
-            else:
-                self.wordSearch = np.array([[['a' for i in range(wordSearchWidth)] for j in range(wordSearchHeight)] for k in range(wordSearchDepth)])
+            self.wordSearch = np.array([[['a' for i in range(wordSearchWidth)] for j in range(wordSearchHeight)] for k in range(wordSearchDepth)])
             self.openWordSearchSpaces = [i for i in range(self.wordSearchSize)]
         else:
             self.wordSearch = wordSearch
@@ -31,17 +28,10 @@ class WordSearchInfo:
 
 
     def printWordSearch(self):
-        if (self.wordSearchDepth < 0):
+        if (self.wordSearchDepth <= 0):
             print("the provided wordSearch does not have a valid depth")
 
-        elif (self.wordSearchDepth == 0): # 1D
-            print(*self.wordSearch[0])
-
-        elif (self.wordSearchDepth == 1): # 2D
-            for i in range(self.wordSearchHeight):
-                print(*self.wordSearch[i])
-
-        elif (self.wordSearchDepth > 1): # 3D
+        elif (self.wordSearchDepth > 0):
             for k in range((self.wordSearchDepth)):
                 for j in range(self.wordSearchHeight):
                     print(*self.wordSearch[k][j])
@@ -49,17 +39,10 @@ class WordSearchInfo:
 
 
     def printWordSearchToFile(self, wordSearchFile):
-        if (self.wordSearchDepth < 0):
+        if (self.wordSearchDepth <= 0):
             print("the provided wordSearch does not have a valid depth", file=wordSearchFile)
 
-        elif (self.wordSearchDepth == 0): # 1D
-            print(*self.wordSearch[0], file=wordSearchFile)
-
-        elif (self.wordSearchDepth == 1): # 2D
-            for i in range(self.wordSearchHeight):
-                print(*self.wordSearch[i], file=wordSearchFile)
-
-        elif (self.wordSearchDepth > 1): # 3D
+        elif (self.wordSearchDepth > 1):
             for k in range((self.wordSearchDepth)):
                 for j in range(self.wordSearchHeight):
                     print(*self.wordSearch[k][j], file=wordSearchFile)
@@ -75,12 +58,7 @@ class WordSearchInfo:
 
         for letter in word:
 
-            # 2D
-            if startingDepth == -1 and self.wordSearch[nextWordSearchHeightIndex][nextWordSearchWidthIndex] == letter:
-                foundWord = True
-
-            # 3D
-            elif self.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == letter:
+            if self.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == letter:
                 foundWord = True
                 
             else:
