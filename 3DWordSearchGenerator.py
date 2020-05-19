@@ -154,7 +154,7 @@ def tryWord(word, depth, height, width, directions, wordSearchInfo):
         if not wordAdded:
             usedDirection = direction
 
-        # Depth does not change
+        # depth does not change
             if direction == 'right':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'right',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = 0, widthChange = 1)
@@ -224,7 +224,7 @@ def tryWord(word, depth, height, width, directions, wordSearchInfo):
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'out',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = 0, widthChange = 0)
 
-        #depth goes in (away from user)
+        # depth goes in (away from user)
             elif direction == 'rightIn':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightIn',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = 0, widthChange = 1)

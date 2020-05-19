@@ -23,21 +23,18 @@ def main():
     for depth in range(len(wordSearch)):
         for height in range(len(wordSearch[depth])):
             for width in range(len(wordSearch[depth][height])):
-               # print("d:", depth, ", h:", height, ", w:", width, ", Value:", wordSearchInfo.wordSearch[depth][height][width])
                 checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet)  
     print('words not found:', list(set(wordList) - foundWordSet))
 
 
 def parse3DWordSearchFromFile(wordSearchFile):
     wordSearch3DIn2D = [[letter for letter in line.split()] for line in wordSearchFile] # wordSearch3DIn2D has the right characters, but wrong dimensions, which is why the rest is needed
-    print(wordSearch3DIn2D)
     height = find3DWordSearchHeight(wordSearch3DIn2D) 
     width = find3DWordSearchWidth(wordSearch3DIn2D)
     totalNumberOfLines = getTotalNumberOfWordSearchFileLines(wordSearch3DIn2D)
     depth = totalNumberOfLines // (height + 2) # NOTE the 2 is from the double blank lines that seperates sections of the 3D word search
-    print("d:", depth, ", h:", height, ", w:", width, "total:", totalNumberOfLines)
 
-    wordSearch = np.array([[[0 for _ in range(width)] for _ in range(height)] for _ in range(depth)])
+    wordSearch = np.array([[['a' for _ in range(width)] for _ in range(height)] for _ in range(depth)])
     wordSearch3DIn2DHeight = 0
     wordSearch3DIn2DWidth = 0
     for k in range(depth):
@@ -76,134 +73,142 @@ def getTotalNumberOfWordSearchFileLines(wordSearch3DIn2D):
     return len(wordSearch3DIn2D)
 
 
+def checkWordInDirection(wordSearchInfo, word, direction, directionsFoundIn, startingDepth, startingHeight, startingWidth, depthChange, heightChange, widthChange):
+    nextWordSearchDepthIndex = startingDepth
+    nextWordSearchHeightIndex = startingHeight
+    nextWordSearchWidthIndex = startingWidth
+    foundWord = False
+
+    for letter in word:
+
+        if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == letter:
+            foundWord = True
+            
+        else:
+            foundWord = False
+            break
+        
+        if wordSearchInfo.directionCheck(direction, nextWordSearchDepthIndex, nextWordSearchHeightIndex, nextWordSearchWidthIndex):
+            nextWordSearchDepthIndex += depthChange
+            nextWordSearchHeightIndex += heightChange
+            nextWordSearchWidthIndex += widthChange
+
+    if foundWord:
+        directionsFoundIn.append(direction)
+
+
 def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
     for word in reversed(wordList): # for each word in the wordList, itereted backwards so that things can be popped cleanly  
         directionsFoundIn = []
 
-        if wordSearchInfo.wordSearch[depth][height][width] == wordList[word][0]:      
+        if wordSearchInfo.wordSearch[depth][height][width] == word[0]:      
 
-        # NOTE the following direction checks are for when the depth remains the same
-            # check the right direction
-            if width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth][height][width + 1] == wordList[word][1]:
+        # depth does not change
+            if width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth][height][width + 1] == word[1]:
                 wordSearchInfo.checkWordInDirection(word = word, direction = 'right', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = 0, widthChange = 1)
 
-            # check the right, down direction
-            if height + 1 < wordSearchInfo.wordSearchHeight and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth][height + 1][width + 1] == wordList[word][1]:
+            elif height + 1 < wordSearchInfo.wordSearchHeight and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth][height + 1][width + 1] == word[1]:
                 wordSearchInfo.checkWordInDirection(word = word, direction = 'rightDown', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = 1, widthChange = 1)
 
-            # check the down direction
-            if height + 1 < wordSearchInfo.wordSearchHeight and wordSearchInfo.wordSearch[depth][height + 1][width] == wordList[word][1]:
+            elif height + 1 < wordSearchInfo.wordSearchHeight and wordSearchInfo.wordSearch[depth][height + 1][width] == word[1]:
                 wordSearchInfo.checkWordInDirection(word = word, direction = 'down', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = 1, widthChange = 0)
 
-            # check the left, down direction
-            if height + 1 < wordSearchInfo.wordSearchHeight and width - 1 >= 0 and wordSearchInfo.wordSearch[depth][height + 1][width - 1] == wordList[word][1]:
+            elif height + 1 < wordSearchInfo.wordSearchHeight and width - 1 >= 0 and wordSearchInfo.wordSearch[depth][height + 1][width - 1] == word[1]:
                 wordSearchInfo.checkWordInDirection(word = word, direction = 'leftDown', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = 1, widthChange = -1)
 
-            # check the left direction
-            if width - 1 >= 0 and wordSearchInfo.wordSearch[depth][height][width - 1] == wordList[word][1]:
+            elif width - 1 >= 0 and wordSearchInfo.wordSearch[depth][height][width - 1] == word[1]:
                 wordSearchInfo.checkWordInDirection(word = word, direction = 'left', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = 0, widthChange = -1)
 
-            # check the left up direction
-            if height - 1 >= 0 and width - 1 >= 0 and wordSearchInfo.wordSearch[depth][height - 1][width - 1] == wordList[word][1]:
+            elif height - 1 >= 0 and width - 1 >= 0 and wordSearchInfo.wordSearch[depth][height - 1][width - 1] == word[1]:
                 wordSearchInfo.checkWordInDirection(word = word, direction = 'leftUp', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = -1, widthChange = -1)
 
-            # check the up direction
-            if height - 1 >= 0 and wordSearchInfo.wordSearch[depth][height - 1][width] == wordList[word][1]:
+            elif height - 1 >= 0 and wordSearchInfo.wordSearch[depth][height - 1][width] == word[1]:
                 wordSearchInfo.checkWordInDirection(word = word, direction = 'up', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = -1, widthChange = 0)
 
-            # check the right, up direction
-            if height - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth][height - 1][width + 1] == wordList[word][1]:
+            elif height - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth][height - 1][width + 1] == word[1]:
                 wordSearchInfo.checkWordInDirection(word = word, direction = 'rightUp', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = -1, widthChange = 1)
 
-        # NOTE the following direction checks are for when the depth goes out (to the user)
-            # check the right direction
-            if depth - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth - 1][height][width + 1] == wordList[word][1]:
+        # depth goes out (to the user)
+            elif depth - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth - 1][height][width + 1] == word[1]:
                 wordSearchInfo.checkWordInDirection(word = word, direction = 'rightOut', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = 0, widthChange = 1)
 
-            # check the right, down direction
-            if depth - 1 >= 0 and height + 1 < wordSearchInfo.wordSearchHeight and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth - 1][height + 1][width + 1] == wordList[word][1]:
+            elif depth - 1 >= 0 and height + 1 < wordSearchInfo.wordSearchHeight and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth - 1][height + 1][width + 1] == word[1]:
                 wordSearchInfo.checkWordInDirection(word = word, direction = 'rightDownOut', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = 1, widthChange = 1)
 
-            # check the down direction
-            if depth - 1 >= 0 and height + 1 < wordSearchInfo.wordSearchHeight and wordSearchInfo.wordSearch[depth - 1][height + 1][width] == wordList[word][1]:
+            elif depth - 1 >= 0 and height + 1 < wordSearchInfo.wordSearchHeight and wordSearchInfo.wordSearch[depth - 1][height + 1][width] == word[1]:
                 wordSearchInfo.checkWordInDirection(word = word, direction = 'downOut', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = 1, widthChange = 0)
 
-            # check the left, down direction
-            if depth - 1 >= 0 and height + 1 < wordSearchInfo.wordSearchHeight and width - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height + 1][width - 1] == wordList[word][1]:
+            elif depth - 1 >= 0 and height + 1 < wordSearchInfo.wordSearchHeight and width - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height + 1][width - 1] == word[1]:
                 wordSearchInfo.checkWordInDirection(word = word, direction = 'leftDownOut', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = 1, widthChange = -1)
 
-            # check the left direction
-            if depth - 1 >= 0 and  width - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height][width - 1] == wordList[word][1]:
+            elif depth - 1 >= 0 and  width - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height][width - 1] == word[1]:
                 wordSearchInfo.checkWordInDirection(word = word, direction = 'leftOut', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = 0, widthChange = -1)
 
-            # check the left up direction
-            if depth - 1 >= 0 and  height - 1 >= 0 and width - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height - 1][width - 1] == wordList[word][1]:
+            elif depth - 1 >= 0 and  height - 1 >= 0 and width - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height - 1][width - 1] == word[1]:
                 wordSearchInfo.checkWordInDirection(word = word, direction = 'leftUpOut', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = -1, widthChange = -1)
 
-            # check the up direction
-            if depth - 1 >= 0 and  height - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height - 1][width] == wordList[word][1]:
+            elif depth - 1 >= 0 and  height - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height - 1][width] == word[1]:
                 wordSearchInfo.checkWordInDirection(word = word, direction = 'upOut', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = -1, widthChange = 0)
 
-            # check the right, up direction
-            if depth - 1 >= 0 and height - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth - 1][height - 1][width + 1] == wordList[word][1]:
+            elif depth - 1 >= 0 and height - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth - 1][height - 1][width + 1] == word[1]:
                 wordSearchInfo.checkWordInDirection(word = word, direction = 'rightUpOut', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = -1, widthChange = 1)
 
-        # NOTE the following direction checks are for when the depth goes in (away from the user)
-            # check the right direction
-            if depth + 1 < wordSearchInfo.wordSearchDepth and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth + 1][height][width + 1] == wordList[word][1]:
+            elif depth - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height][width] == word[1]:
+                wordSearchInfo.checkWordInDirection(word = word, direction = 'out', directionsFoundIn = directionsFoundIn, 
+                    startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = 0, widthChange = 0)
+
+        # depth goes in (away from user)
+            elif depth + 1 < wordSearchInfo.wordSearchDepth and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth + 1][height][width + 1] == word[1]:
                 wordSearchInfo.checkWordInDirection(word = word, direction = 'rightIn', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = 0, widthChange = 1)
             
-            # check the right, down direction
-            if depth + 1 < wordSearchInfo.wordSearchDepth and height + 1 < wordSearchInfo.wordSearchHeight and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth + 1][height + 1][width + 1] == wordList[word][1]:
+            elif depth + 1 < wordSearchInfo.wordSearchDepth and height + 1 < wordSearchInfo.wordSearchHeight and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth + 1][height + 1][width + 1] == word[1]:
                 wordSearchInfo.checkWordInDirection(word = word, direction = 'rightDownIn', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = 1, widthChange = 1)
 
-            # check the down direction
-            if depth + 1 < wordSearchInfo.wordSearchDepth and height + 1 < wordSearchInfo.wordSearchHeight and wordSearchInfo.wordSearch[depth + 1][height + 1][width] == wordList[word][1]:
+            elif depth + 1 < wordSearchInfo.wordSearchDepth and height + 1 < wordSearchInfo.wordSearchHeight and wordSearchInfo.wordSearch[depth + 1][height + 1][width] == word[1]:
                 wordSearchInfo.checkWordInDirection(word = word, direction = 'downIn', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = 1, widthChange = 0)
 
-            # check the left, down direction
-            if depth + 1 < wordSearchInfo.wordSearchDepth and height + 1 < wordSearchInfo.wordSearchHeight and width - 1 >= 0 and wordSearchInfo.wordSearch[depth + 1][height + 1][width - 1] == wordList[word][1]:
+            elif depth + 1 < wordSearchInfo.wordSearchDepth and height + 1 < wordSearchInfo.wordSearchHeight and width - 1 >= 0 and wordSearchInfo.wordSearch[depth + 1][height + 1][width - 1] == word[1]:
                 wordSearchInfo.checkWordInDirection(word = word, direction = 'leftDownIn', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = 1, widthChange = -1)
 
-            # check the left direction
-            if depth + 1 < wordSearchInfo.wordSearchDepth and  width - 1 >= 0 and wordSearchInfo.wordSearch[depth + 1][height][width - 1] == wordList[word][1]:
+            elif depth + 1 < wordSearchInfo.wordSearchDepth and  width - 1 >= 0 and wordSearchInfo.wordSearch[depth + 1][height][width - 1] == word[1]:
                 wordSearchInfo.checkWordInDirection(word = word, direction = 'leftIn', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = 0, widthChange = -1)
 
-            # check the left up direction
-            if depth + 1 < wordSearchInfo.wordSearchDepth and  height - 1 >= 0 and width - 1 >= 0 and wordSearchInfo.wordSearch[depth + 1][height - 1][width - 1] == wordList[word][1]:
+            elif depth + 1 < wordSearchInfo.wordSearchDepth and  height - 1 >= 0 and width - 1 >= 0 and wordSearchInfo.wordSearch[depth + 1][height - 1][width - 1] == word[1]:
                 wordSearchInfo.checkWordInDirection(word = word, direction = 'leftUpIn', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = -1, widthChange = -1)
 
-            # check the up direction
-            if depth + 1 < wordSearchInfo.wordSearchDepth and  height - 1 >= 0 and wordSearchInfo.wordSearch[depth + 1][height - 1][width] == wordList[word][1]:
+            elif depth + 1 < wordSearchInfo.wordSearchDepth and  height - 1 >= 0 and wordSearchInfo.wordSearch[depth + 1][height - 1][width] == word[1]:
                 wordSearchInfo.checkWordInDirection(word = word, direction = 'upIn', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = -1, widthChange = 0)
 
-            # check the right, up direction
-            if depth + 1 < wordSearchInfo.wordSearchDepth and height - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth + 1][height - 1][width + 1] == wordList[word][1]:
+            elif depth + 1 < wordSearchInfo.wordSearchDepth and height - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth + 1][height - 1][width + 1] == word[1]:
                 wordSearchInfo.checkWordInDirection(word = word, direction = 'rightUpIn', directionsFoundIn = directionsFoundIn, 
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = -1, widthChange = 1)
+
+            elif depth + 1 < wordSearchInfo.wordSearchDepth and wordSearchInfo.wordSearch[depth + 1][height][width] == word[1]:
+                wordSearchInfo.checkWordInDirection(word = word, direction = 'in', directionsFoundIn = directionsFoundIn, 
+                    startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = 0, widthChange = 0)
 
 
 
@@ -214,13 +219,13 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
 
         # # NOTE the following direction checks are for when the depth remains the same
         #     # check the right direction
-        #     if width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth][height][width + 1] == wordList[word][1]:
+        #     if width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth][height][width + 1] == word[1]:
         #         wordSearchInfo.checkWordInDirection(word = word, direction = 'right', directionsFoundIn = directionsFoundIn, 
         #             startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = 0, widthChange = 1) 
 
         #         nextWordSearchWidthIndex = width
-        #         for letter in range(len(wordList[word])):
-        #             if wordSearchInfo.wordSearch[depth][height][nextWordSearchWidthIndex] == wordList[word][letter]:
+        #         for letter in range(len(word)):
+        #             if wordSearchInfo.wordSearch[depth][height][nextWordSearchWidthIndex] == word[letter]:
         #                 foundWord = True
         #                 direction = "right"
         #             else:
@@ -230,11 +235,11 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
         #                 nextWordSearchWidthIndex += 1
             
         #     # check the right, down direction
-        #     if height + 1 < wordSearchInfo.wordSearchHeight and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth][height + 1][width + 1] == wordList[word][1]:
+        #     if height + 1 < wordSearchInfo.wordSearchHeight and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth][height + 1][width + 1] == word[1]:
         #         nextWordSearchWidthIndex = width
         #         nextWordSearchHeightIndex = height
-        #         for letter in range(len(wordList[word])):
-        #             if wordSearchInfo.wordSearch[depth][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == wordList[word][letter]:
+        #         for letter in range(len(word)):
+        #             if wordSearchInfo.wordSearch[depth][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == word[letter]:
         #                 foundWord = True
         #                 direction = "rightDown"
         #             else:
@@ -245,10 +250,10 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
         #                 nextWordSearchHeightIndex += 1
 
         #     # check the down direction
-        #     if height + 1 < wordSearchInfo.wordSearchHeight and wordSearchInfo.wordSearch[depth][height + 1][width] == wordList[word][1]:
+        #     if height + 1 < wordSearchInfo.wordSearchHeight and wordSearchInfo.wordSearch[depth][height + 1][width] == word[1]:
         #         nextWordSearchHeightIndex = height
-        #         for letter in range(len(wordList[word])):
-        #             if wordSearchInfo.wordSearch[depth][nextWordSearchHeightIndex][width] == wordList[word][letter]:
+        #         for letter in range(len(word)):
+        #             if wordSearchInfo.wordSearch[depth][nextWordSearchHeightIndex][width] == word[letter]:
         #                 foundWord = True
         #                 direction = "down"
         #             else:
@@ -258,11 +263,11 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
         #                 nextWordSearchHeightIndex += 1
 
         #     # check the left, down direction
-        #     if height + 1 < wordSearchInfo.wordSearchHeight and width - 1 >= 0 and wordSearchInfo.wordSearch[depth][height + 1][width - 1] == wordList[word][1]:
+        #     if height + 1 < wordSearchInfo.wordSearchHeight and width - 1 >= 0 and wordSearchInfo.wordSearch[depth][height + 1][width - 1] == word[1]:
         #         nextWordSearchWidthIndex = width
         #         nextWordSearchHeightIndex = height
-        #         for letter in range(len(wordList[word])):
-        #             if wordSearchInfo.wordSearch[depth][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == wordList[word][letter]:
+        #         for letter in range(len(word)):
+        #             if wordSearchInfo.wordSearch[depth][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == word[letter]:
         #                 foundWord = True
         #                 direction = "leftDown"
         #             else:
@@ -273,10 +278,10 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
         #                 nextWordSearchHeightIndex += 1
 
         #     # check the left direction
-        #     if width - 1 >= 0 and wordSearchInfo.wordSearch[depth][height][width - 1] == wordList[word][1]:
+        #     if width - 1 >= 0 and wordSearchInfo.wordSearch[depth][height][width - 1] == word[1]:
         #         nextWordSearchWidthIndex = width
-        #         for letter in range(len(wordList[word])):
-        #             if wordSearchInfo.wordSearch[depth][height][nextWordSearchWidthIndex] == wordList[word][letter]:
+        #         for letter in range(len(word)):
+        #             if wordSearchInfo.wordSearch[depth][height][nextWordSearchWidthIndex] == word[letter]:
         #                 foundWord = True
         #                 direction = "left"
         #             else:
@@ -286,11 +291,11 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
         #                 nextWordSearchWidthIndex -= 1
 
         #     # check the left up direction
-        #     if height - 1 >= 0 and width - 1 >= 0 and wordSearchInfo.wordSearch[depth][height - 1][width - 1] == wordList[word][1]:
+        #     if height - 1 >= 0 and width - 1 >= 0 and wordSearchInfo.wordSearch[depth][height - 1][width - 1] == word[1]:
         #         nextWordSearchWidthIndex = width
         #         nextWordSearchHeightIndex = height
-        #         for letter in range(len(wordList[word])):
-        #             if wordSearchInfo.wordSearch[depth][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == wordList[word][letter]:
+        #         for letter in range(len(word)):
+        #             if wordSearchInfo.wordSearch[depth][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == word[letter]:
         #                 foundWord = True
         #                 direction = "leftUp"
         #             else:
@@ -301,10 +306,10 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
         #                 nextWordSearchHeightIndex -= 1
 
         #     # check the up direction
-        #     if height - 1 >= 0 and wordSearchInfo.wordSearch[depth][height - 1][width] == wordList[word][1]:
+        #     if height - 1 >= 0 and wordSearchInfo.wordSearch[depth][height - 1][width] == word[1]:
         #         nextWordSearchHeightIndex = height
-        #         for letter in range(len(wordList[word])):
-        #             if wordSearchInfo.wordSearch[depth][nextWordSearchHeightIndex][width] == wordList[word][letter]:
+        #         for letter in range(len(word)):
+        #             if wordSearchInfo.wordSearch[depth][nextWordSearchHeightIndex][width] == word[letter]:
         #                 foundWord = True
         #                 direction = "up"
         #             else:
@@ -314,11 +319,11 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
         #                 nextWordSearchHeightIndex -= 1
 
         #     # check the right, up direction
-        #     if height - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth][height - 1][width + 1] == wordList[word][1]:
+        #     if height - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth][height - 1][width + 1] == word[1]:
         #         nextWordSearchWidthIndex = width
         #         nextWordSearchHeightIndex = height
-        #         for letter in range(len(wordList[word])):
-        #             if wordSearchInfo.wordSearch[depth][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == wordList[word][letter]:
+        #         for letter in range(len(word)):
+        #             if wordSearchInfo.wordSearch[depth][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == word[letter]:
         #                 foundWord = True
         #                 direction = "rightUp"
         #             else:
@@ -330,11 +335,11 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
 
         # # NOTE the following direction checks are for when the depth goes out (to the user)
         #     # check the right direction
-        #     if depth - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth - 1][height][width + 1] == wordList[word][1]:
+        #     if depth - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth - 1][height][width + 1] == word[1]:
         #         nextWordSearchDepthIndex = depth
         #         nextWordSearchWidthIndex = width
-        #         for letter in range(len(wordList[word])):
-        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][height][nextWordSearchWidthIndex] == wordList[word][letter]:
+        #         for letter in range(len(word)):
+        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][height][nextWordSearchWidthIndex] == word[letter]:
         #                 foundWord = True
         #                 direction = "rightOut"
         #             else:
@@ -345,12 +350,12 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
         #                 nextWordSearchWidthIndex += 1
             
         #     # check the right, down direction
-        #     if depth - 1 >= 0 and height + 1 < wordSearchInfo.wordSearchHeight and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth - 1][height + 1][width + 1] == wordList[word][1]:
+        #     if depth - 1 >= 0 and height + 1 < wordSearchInfo.wordSearchHeight and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth - 1][height + 1][width + 1] == word[1]:
         #         nextWordSearchDepthIndex = depth
         #         nextWordSearchWidthIndex = width
         #         nextWordSearchHeightIndex = height
-        #         for letter in range(len(wordList[word])):
-        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == wordList[word][letter]:
+        #         for letter in range(len(word)):
+        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == word[letter]:
         #                 foundWord = True
         #                 direction = "rightDownOut"
         #             else:
@@ -362,11 +367,11 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
         #                 nextWordSearchHeightIndex += 1
 
         #     # check the down direction
-        #     if depth - 1 >= 0 and height + 1 < wordSearchInfo.wordSearchHeight and wordSearchInfo.wordSearch[depth - 1][height + 1][width] == wordList[word][1]:
+        #     if depth - 1 >= 0 and height + 1 < wordSearchInfo.wordSearchHeight and wordSearchInfo.wordSearch[depth - 1][height + 1][width] == word[1]:
         #         nextWordSearchDepthIndex = depth
         #         nextWordSearchHeightIndex = height
-        #         for letter in range(len(wordList[word])):
-        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][width] == wordList[word][letter]:
+        #         for letter in range(len(word)):
+        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][width] == word[letter]:
         #                 foundWord = True
         #                 direction = "downOut"
         #             else:
@@ -377,12 +382,12 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
         #                 nextWordSearchHeightIndex += 1
 
         #     # check the left, down direction
-        #     if depth - 1 >= 0 and height + 1 < wordSearchInfo.wordSearchHeight and width - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height + 1][width - 1] == wordList[word][1]:
+        #     if depth - 1 >= 0 and height + 1 < wordSearchInfo.wordSearchHeight and width - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height + 1][width - 1] == word[1]:
         #         nextWordSearchDepthIndex = depth
         #         nextWordSearchWidthIndex = width
         #         nextWordSearchHeightIndex = height
-        #         for letter in range(len(wordList[word])):
-        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == wordList[word][letter]:
+        #         for letter in range(len(word)):
+        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == word[letter]:
         #                 foundWord = True
         #                 direction = "leftDownOut"
         #             else:
@@ -394,11 +399,11 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
         #                 nextWordSearchHeightIndex += 1
 
         #     # check the left direction
-        #     if depth - 1 >= 0 and  width - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height][width - 1] == wordList[word][1]:
+        #     if depth - 1 >= 0 and  width - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height][width - 1] == word[1]:
         #         nextWordSearchDepthIndex = depth
         #         nextWordSearchWidthIndex = width
-        #         for letter in range(len(wordList[word])):
-        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][height][nextWordSearchWidthIndex] == wordList[word][letter]:
+        #         for letter in range(len(word)):
+        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][height][nextWordSearchWidthIndex] == word[letter]:
         #                 foundWord = True
         #                 direction = "leftOut"
         #             else:
@@ -409,12 +414,12 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
         #                 nextWordSearchWidthIndex -= 1
 
         #     # check the left up direction
-        #     if depth - 1 >= 0 and  height - 1 >= 0 and width - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height - 1][width - 1] == wordList[word][1]:
+        #     if depth - 1 >= 0 and  height - 1 >= 0 and width - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height - 1][width - 1] == word[1]:
         #         nextWordSearchDepthIndex = depth
         #         nextWordSearchWidthIndex = width
         #         nextWordSearchHeightIndex = height
-        #         for letter in range(len(wordList[word])):
-        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == wordList[word][letter]:
+        #         for letter in range(len(word)):
+        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == word[letter]:
         #                 foundWord = True
         #                 direction = "leftUpOut"
         #             else:
@@ -426,11 +431,11 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
         #                 nextWordSearchHeightIndex -= 1
 
         #     # check the up direction
-        #     if depth - 1 >= 0 and  height - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height - 1][width] == wordList[word][1]:
+        #     if depth - 1 >= 0 and  height - 1 >= 0 and wordSearchInfo.wordSearch[depth - 1][height - 1][width] == word[1]:
         #         nextWordSearchDepthIndex = depth
         #         nextWordSearchHeightIndex = height
-        #         for letter in range(len(wordList[word])):
-        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][width] == wordList[word][letter]:
+        #         for letter in range(len(word)):
+        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][width] == word[letter]:
         #                 foundWord = True
         #                 direction = "upOut"
         #             else:
@@ -441,12 +446,12 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
         #                 nextWordSearchHeightIndex -= 1
 
         #     # check the right, up direction
-        #     if depth - 1 >= 0 and height - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth - 1][height - 1][width + 1] == wordList[word][1]:
+        #     if depth - 1 >= 0 and height - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth - 1][height - 1][width + 1] == word[1]:
         #         nextWordSearchDepthIndex = depth
         #         nextWordSearchWidthIndex = width
         #         nextWordSearchHeightIndex = height
-        #         for letter in range(len(wordList[word])):
-        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == wordList[word][letter]:
+        #         for letter in range(len(word)):
+        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == word[letter]:
         #                 foundWord = True
         #                 direction = "rightUpOut"
         #             else:
@@ -459,11 +464,11 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
 
         # # NOTE the following direction checks are for when the depth goes in (away from the user)
         #     # check the right direction
-        #     if depth + 1 < wordSearchInfo.wordSearchDepth and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth + 1][height][width + 1] == wordList[word][1]:
+        #     if depth + 1 < wordSearchInfo.wordSearchDepth and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth + 1][height][width + 1] == word[1]:
         #         nextWordSearchDepthIndex = depth
         #         nextWordSearchWidthIndex = width
-        #         for letter in range(len(wordList[word])):
-        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][height][nextWordSearchWidthIndex] == wordList[word][letter]:
+        #         for letter in range(len(word)):
+        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][height][nextWordSearchWidthIndex] == word[letter]:
         #                 foundWord = True
         #                 direction = "rightIn"
         #             else:
@@ -474,12 +479,12 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
         #                 nextWordSearchWidthIndex += 1
             
         #     # check the right, down direction
-        #     if depth + 1 < wordSearchInfo.wordSearchDepth and height + 1 < wordSearchInfo.wordSearchHeight and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth + 1][height + 1][width + 1] == wordList[word][1]:
+        #     if depth + 1 < wordSearchInfo.wordSearchDepth and height + 1 < wordSearchInfo.wordSearchHeight and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth + 1][height + 1][width + 1] == word[1]:
         #         nextWordSearchDepthIndex = depth
         #         nextWordSearchWidthIndex = width
         #         nextWordSearchHeightIndex = height
-        #         for letter in range(len(wordList[word])):
-        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == wordList[word][letter]:
+        #         for letter in range(len(word)):
+        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == word[letter]:
         #                 foundWord = True
         #                 direction = "rightDownIn"
         #             else:
@@ -491,11 +496,11 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
         #                 nextWordSearchHeightIndex += 1
 
         #     # check the down direction
-        #     if depth + 1 < wordSearchInfo.wordSearchDepth and height + 1 < wordSearchInfo.wordSearchHeight and wordSearchInfo.wordSearch[depth + 1][height + 1][width] == wordList[word][1]:
+        #     if depth + 1 < wordSearchInfo.wordSearchDepth and height + 1 < wordSearchInfo.wordSearchHeight and wordSearchInfo.wordSearch[depth + 1][height + 1][width] == word[1]:
         #         nextWordSearchDepthIndex = depth
         #         nextWordSearchHeightIndex = height
-        #         for letter in range(len(wordList[word])):
-        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][width] == wordList[word][letter]:
+        #         for letter in range(len(word)):
+        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][width] == word[letter]:
         #                 foundWord = True
         #                 direction = "downIn"
         #             else:
@@ -506,12 +511,12 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
         #                 nextWordSearchHeightIndex += 1
 
         #     # check the left, down direction
-        #     if depth + 1 < wordSearchInfo.wordSearchDepth and height + 1 < wordSearchInfo.wordSearchHeight and width - 1 >= 0 and wordSearchInfo.wordSearch[depth + 1][height + 1][width - 1] == wordList[word][1]:
+        #     if depth + 1 < wordSearchInfo.wordSearchDepth and height + 1 < wordSearchInfo.wordSearchHeight and width - 1 >= 0 and wordSearchInfo.wordSearch[depth + 1][height + 1][width - 1] == word[1]:
         #         nextWordSearchDepthIndex = depth
         #         nextWordSearchWidthIndex = width
         #         nextWordSearchHeightIndex = height
-        #         for letter in range(len(wordList[word])):
-        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == wordList[word][letter]:
+        #         for letter in range(len(word)):
+        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == word[letter]:
         #                 foundWord = True
         #                 direction = "leftDownIn"
         #             else:
@@ -523,11 +528,11 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
         #                 nextWordSearchHeightIndex += 1
 
         #     # check the left direction
-        #     if depth + 1 < wordSearchInfo.wordSearchDepth and  width - 1 >= 0 and wordSearchInfo.wordSearch[depth + 1][height][width - 1] == wordList[word][1]:
+        #     if depth + 1 < wordSearchInfo.wordSearchDepth and  width - 1 >= 0 and wordSearchInfo.wordSearch[depth + 1][height][width - 1] == word[1]:
         #         nextWordSearchDepthIndex = depth
         #         nextWordSearchWidthIndex = width
-        #         for letter in range(len(wordList[word])):
-        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][height][nextWordSearchWidthIndex] == wordList[word][letter]:
+        #         for letter in range(len(word)):
+        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][height][nextWordSearchWidthIndex] == word[letter]:
         #                 foundWord = True
         #                 direction = "leftIn"
         #             else:
@@ -538,12 +543,12 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
         #                 nextWordSearchWidthIndex -= 1
 
         #     # check the left up direction
-        #     if depth + 1 < wordSearchInfo.wordSearchDepth and  height - 1 >= 0 and width - 1 >= 0 and wordSearchInfo.wordSearch[depth + 1][height - 1][width - 1] == wordList[word][1]:
+        #     if depth + 1 < wordSearchInfo.wordSearchDepth and  height - 1 >= 0 and width - 1 >= 0 and wordSearchInfo.wordSearch[depth + 1][height - 1][width - 1] == word[1]:
         #         nextWordSearchDepthIndex = depth
         #         nextWordSearchWidthIndex = width
         #         nextWordSearchHeightIndex = height
-        #         for letter in range(len(wordList[word])):
-        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == wordList[word][letter]:
+        #         for letter in range(len(word)):
+        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == word[letter]:
         #                 foundWord = True
         #                 direction = "leftUpIn"
         #             else:
@@ -555,11 +560,11 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
         #                 nextWordSearchHeightIndex -= 1
 
         #     # check the up direction
-        #     if depth + 1 < wordSearchInfo.wordSearchDepth and  height - 1 >= 0 and wordSearchInfo.wordSearch[depth + 1][height - 1][width] == wordList[word][1]:
+        #     if depth + 1 < wordSearchInfo.wordSearchDepth and  height - 1 >= 0 and wordSearchInfo.wordSearch[depth + 1][height - 1][width] == word[1]:
         #         nextWordSearchDepthIndex = depth
         #         nextWordSearchHeightIndex = height
-        #         for letter in range(len(wordList[word])):
-        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][width] == wordList[word][letter]:
+        #         for letter in range(len(word)):
+        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][width] == word[letter]:
         #                 foundWord = True
         #                 direction = "upIn"
         #             else:
@@ -570,12 +575,12 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
         #                 nextWordSearchHeightIndex -= 1
 
         #     # check the right, up direction
-        #     if depth + 1 < wordSearchInfo.wordSearchDepth and height - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth + 1][height - 1][width + 1] == wordList[word][1]:
+        #     if depth + 1 < wordSearchInfo.wordSearchDepth and height - 1 >= 0 and width + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[depth + 1][height - 1][width + 1] == word[1]:
         #         nextWordSearchDepthIndex = depth
         #         nextWordSearchWidthIndex = width
         #         nextWordSearchHeightIndex = height
-        #         for letter in range(len(wordList[word])):
-        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == wordList[word][letter]:
+        #         for letter in range(len(word)):
+        #             if wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == word[letter]:
         #                 foundWord = True
         #                 direction = "rightUpIn"
         #             else:
@@ -587,7 +592,7 @@ def checkForWord(depth, height, width, wordSearchInfo, wordList, foundWordSet):
         #                 nextWordSearchHeightIndex -= 1
 
         for direction in directionsFoundIn:
-            print(wordList[word], "was found starting at postition [", depth, "][", height, "][", width, "] going in the", direction, "direction")
+            print(word, "was found starting at postition [", depth, "][", height, "][", width, "] going in the", direction, "direction")
             foundWordSet.add(word)
 
 if __name__=="__main__":

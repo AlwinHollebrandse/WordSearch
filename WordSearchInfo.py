@@ -17,10 +17,10 @@ class WordSearchInfo:
 
 
     def toString(self):
-        print("wordSearchDepth:", self.wordSearchDepth, ", wordSearchHeight:", self.wordSearchHeight,
-            ", wordSearchWidth:", self.wordSearchWidth, ", wordSearchSize:", self.wordSearchSize,
-            "\nwordList:", self.wordList,
-            "\nopenWordSearchSpaces:", self.openWordSearchSpaces)
+        print('wordSearchDepth:', self.wordSearchDepth, ', wordSearchHeight:', self.wordSearchHeight,
+            ', wordSearchWidth:', self.wordSearchWidth, ', wordSearchSize:', self.wordSearchSize,
+            '\nwordList:', self.wordList,
+            '\nopenWordSearchSpaces:', self.openWordSearchSpaces)
         self.printWordSearch()
 
 
@@ -29,7 +29,7 @@ class WordSearchInfo:
 
     def printWordSearch(self):
         if (self.wordSearchDepth <= 0):
-            print("the provided wordSearch does not have a valid depth")
+            print('the provided wordSearch does not have a valid depth')
 
         elif (self.wordSearchDepth > 0):
             for k in range((self.wordSearchDepth)):
@@ -40,7 +40,7 @@ class WordSearchInfo:
 
     def printWordSearchToFile(self, wordSearchFile):
         if (self.wordSearchDepth <= 0):
-            print("the provided wordSearch does not have a valid depth", file=wordSearchFile)
+            print('the provided wordSearch does not have a valid depth', file=wordSearchFile)
 
         elif (self.wordSearchDepth > 1):
             for k in range((self.wordSearchDepth)):
@@ -48,128 +48,79 @@ class WordSearchInfo:
                     print(*self.wordSearch[k][j], file=wordSearchFile)
                 print('\n', file=wordSearchFile)
 
-        
-    # TODO if 3D depth = 1 then this could move to the solver file
-    def checkWordInDirection(self, word, direction, directionsFoundIn, startingHeight, startingWidth, heightChange, widthChange, startingDepth = -1, depthChange = 0):
-        nextWordSearchDepthIndex = startingDepth
-        nextWordSearchHeightIndex = startingHeight
-        nextWordSearchWidthIndex = startingWidth
-        foundWord = False
-
-        for letter in word:
-
-            if self.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][nextWordSearchWidthIndex] == letter:
-                foundWord = True
-                
-            else:
-                foundWord = False
-                break
-           
-            if directionCheck(self, direction, nextWordSearchDepthIndex, nextWordSearchHeightIndex, nextWordSearchWidthIndex):
-                nextWordSearchDepthIndex += depthChange
-                nextWordSearchHeightIndex += heightChange
-                nextWordSearchWidthIndex += widthChange
-
-        if foundWord:
-            directionsFoundIn.append(direction)
-
 
     def directionCheck(self, direction, nextWordSearchDepthIndex, nextWordSearchHeightIndex, nextWordSearchWidthIndex):
-    # NOTE the following direction checks are for when the depth remains the same
-        # check the right direction
-        if direction == "right":
+    # depth does not change
+        if direction == 'right':
             return nextWordSearchWidthIndex + 1 < self.wordSearchWidth
 
-        # check the right, down direction
-        if direction == "rightDown":
+        elif direction == 'rightDown':
             return nextWordSearchHeightIndex + 1 < self.wordSearchHeight and nextWordSearchWidthIndex + 1 < self.wordSearchWidth
 
-        # check the down direction
-        if direction == "down":
+        elif direction == 'down':
             return nextWordSearchHeightIndex + 1 < self.wordSearchHeight
 
-        # check the left, down direction
-        if direction == "leftDown":
+        elif direction == 'leftDown':
             return nextWordSearchHeightIndex + 1 < self.wordSearchHeight and nextWordSearchWidthIndex - 1 >= 0
 
-        # check the left direction
-        if direction == "left":
+        elif direction == 'left':
             return nextWordSearchWidthIndex - 1 >= 0
 
-        # check the left up direction
-        if direction == "leftUp":
+        elif direction == 'leftUp':
             return nextWordSearchHeightIndex - 1 >= 0 and nextWordSearchWidthIndex - 1 >= 0
 
-        # check the up direction
-        if direction == "up":
+        elif direction == 'up':
             return nextWordSearchHeightIndex - 1 >= 0
 
-        # check the right, up direction
-        if direction == "rightUp":
+        elif direction == 'rightUp':
             return nextWordSearchHeightIndex - 1 >= 0 and nextWordSearchWidthIndex + 1 < self.wordSearchWidth
 
-    # NOTE the following direction checks are for when the depth goes out (to the user)
-        # check the right direction
-        if direction == "rightOut":
+    # depth goes out (to the user)
+        elif direction == 'rightOut':
             return nextWordSearchDepthIndex - 1 >= 0 and nextWordSearchWidthIndex + 1 < self.wordSearchWidth
 
-        # check the right, down direction
-        if direction == "rightDownOut":
+        elif direction == 'rightDownOut':
             return nextWordSearchDepthIndex - 1 >= 0 and nextWordSearchHeightIndex + 1 < self.wordSearchHeight and nextWordSearchWidthIndex + 1 < self.wordSearchWidth
 
-        # check the down direction
-        if direction == "downOut":
+        elif direction == 'downOut':
             return nextWordSearchDepthIndex - 1 >= 0 and nextWordSearchHeightIndex + 1 < self.wordSearchHeight
 
-        # check the left, down direction
-        if direction == "leftDownOut":
+        elif direction == 'leftDownOut':
             return nextWordSearchDepthIndex - 1 >= 0 and nextWordSearchHeightIndex + 1 < self.wordSearchHeight and nextWordSearchWidthIndex - 1 >= 0
 
-        # check the left direction
-        if direction == "leftOut":
+        elif direction == 'leftOut':
             return nextWordSearchDepthIndex - 1 >= 0 and nextWordSearchWidthIndex - 1 >= 0
 
-        # check the left up direction
-        if direction == "leftUpOut":
+        elif direction == 'leftUpOut':
             return nextWordSearchDepthIndex - 1 >= 0 and nextWordSearchHeightIndex - 1 >= 0 and nextWordSearchWidthIndex - 1 >= 0
 
-        # check the up direction
-        if direction == "upOut":
+        elif direction == 'upOut':
             return nextWordSearchDepthIndex - 1 >= 0 and nextWordSearchHeightIndex - 1 >= 0
 
-        # check the right, up direction
-        if direction == "rightUpOut":
+        elif direction == 'rightUpOut':
             return nextWordSearchDepthIndex - 1 >= 0 and nextWordSearchHeightIndex - 1 >= 0 and nextWordSearchWidthIndex + 1 < self.wordSearchWidth
 
-    # NOTE the following direction checks are for when the depth goes in (away from the user)
-        # check the right direction
-        if direction == "rightIn":
+    # depth goes in (away from user)
+        elif direction == 'rightIn':
             return nextWordSearchDepthIndex + 1 < self.wordSearchDepth and nextWordSearchWidthIndex + 1 < self.wordSearchWidth
         
-        # check the right, down direction
-        if direction == "rightDownIn":
+        elif direction == 'rightDownIn':
             return nextWordSearchDepthIndex + 1 < self.wordSearchDepth and nextWordSearchHeightIndex + 1 < self.wordSearchHeight and nextWordSearchWidthIndex + 1 < self.wordSearchWidth
 
-        # check the down direction
-        if direction == "downIn":
+        elif direction == 'downIn':
             return nextWordSearchDepthIndex + 1 < self.wordSearchDepth and nextWordSearchHeightIndex + 1 < self.wordSearchHeight
 
-        # check the left, down direction
-        if direction == "leftDownIn":
+        elif direction == 'leftDownIn':
             return nextWordSearchDepthIndex + 1 < self.wordSearchDepth and nextWordSearchHeightIndex + 1 < self.wordSearchHeight and nextWordSearchWidthIndex - 1 >= 0
 
-        # check the left direction
-        if direction == "leftIn":
+        elif direction == 'leftIn':
             return nextWordSearchDepthIndex + 1 < self.wordSearchDepth and nextWordSearchWidthIndex - 1 >= 0
 
-        # check the left up direction
-        if direction == "leftUpIn":
+        elif direction == 'leftUpIn':
             return nextWordSearchDepthIndex + 1 < self.wordSearchDepth and nextWordSearchHeightIndex - 1 >= 0 and nextWordSearchWidthIndex - 1 >= 0
 
-        # check the up direction
-        if direction == "upIn":
+        elif direction == 'upIn':
             return nextWordSearchDepthIndex + 1 < self.wordSearchDepth and nextWordSearchHeightIndex - 1 >= 0
 
-        # check the right, up direction
-        if direction == "rightUpIn":
+        elif direction == 'rightUpIn':
             return nextWordSearchDepthIndex + 1 < self.wordSearchDepth and nextWordSearchHeightIndex - 1 >= 0 and nextWordSearchWidthIndex + 1 < self.wordSearchWidth
