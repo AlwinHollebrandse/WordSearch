@@ -6,6 +6,8 @@ from WordSearchInfo import WordSearchInfo
 # TODO missing pure 'IN' and 'OUT' directions
 
 def main():
+    twoDimensional = False # TODO get from front end. depth = 1 == 2D
+
     print('generating the word search')
     # TODO add the ability to read files from a CLI
     wordSearchGridMultiplier = 2 # the larger this number is, the more likely that every  word gets added
@@ -20,21 +22,21 @@ def main():
     sumOfWordLengths = len(''.join(wordList))
     nearestCube = findNearestCube(sumOfWordLengths)
     wordSearchMinLength = max(maxWordLength, nearestCube) + 1 # done to increase the odds of a succesful createWordSearch() due to a better fitting wordSearch
-    wordSearchDepth = random.randint(wordSearchMinLength,(wordSearchGridMultiplier * maxWordLength)) # TODO get from front end. depth = 1 == 2D
-    wordSearchHeight = random.randint(wordSearchMinLength, (wordSearchGridMultiplier * wordSearchMinLength))
-    wordSearchWidth = random.randint(wordSearchMinLength, (wordSearchGridMultiplier * wordSearchMinLength))
 
-    if (wordSearchDepth == 1):
+    if (twoDimensional):
         directions = ['right', 'rightDown', 'down', 'leftDown', 'left', 'leftUp', 'up', 'rightUp']
+        wordSearchDepth = 1
     else:
         directions = ['right', 'rightDown', 'down', 'leftDown', 'left', 'leftUp', 'up', 'rightUp', 'rightOut',
             'rightDownOut', 'downOut', 'leftDownOut', 'leftOut', 'leftUpOut', 'upOut', 'rightUpOut', 'out', 'rightIn',
             'rightDownIn', 'downIn', 'leftDownIn', 'leftIn', 'leftUpIn', 'upIn', 'rightUpIn', 'in']
+        wordSearchDepth = random.randint(wordSearchMinLength,(wordSearchGridMultiplier * maxWordLength))
+
+    wordSearchHeight = random.randint(wordSearchMinLength, (wordSearchGridMultiplier * wordSearchMinLength))
+    wordSearchWidth = random.randint(wordSearchMinLength, (wordSearchGridMultiplier * wordSearchMinLength))
 
     wordSearchInfo = WordSearchInfo(wordSearchHeight = wordSearchHeight, wordSearchWidth = wordSearchWidth, 
         wordSearchDepth = wordSearchDepth, wordList = wordList)
-
-    wordSearchInfo.toString()
 
     allWordsAdded = False
     while(allWordsAdded == False):
@@ -64,10 +66,8 @@ def fillRestOfWordSearch(wordSearchInfo):
                     wordSearchInfo.wordSearch[k][j][i]=randomLetter
 
 
-def addWord(depthChange, heightChange, widthChange, nextWordSearchDepthIndex, nextWordSearchWidthIndex, nextWordSearchHeightIndex, word, wordSearchInfo):
+def addWord(depthChange, heightChange, widthChange, nextWordSearchDepthIndex, nextWordSearchHeightIndex, nextWordSearchWidthIndex, word, wordSearchInfo):
     for letter in word:
-        print('\nHERE actual Size DHW', wordSearchInfo.wordSearchDepth, wordSearchInfo.wordSearchHeight, wordSearchInfo.wordSearchWidth)
-        print('used DHW', nextWordSearchDepthIndex, nextWordSearchHeightIndex, nextWordSearchWidthIndex) # TODO BUG sometimes
         wordSearchInfo.wordSearch[nextWordSearchDepthIndex][nextWordSearchHeightIndex][nextWordSearchWidthIndex] = letter
         nextOpenSpace = nextWordSearchWidthIndex + (nextWordSearchHeightIndex * wordSearchInfo.wordSearchWidth) + (nextWordSearchDepthIndex * wordSearchInfo.wordSearchWidth * wordSearchInfo.wordSearchHeight)
         if nextOpenSpace in wordSearchInfo.openWordSearchSpaces:
@@ -123,8 +123,6 @@ def createWordSearch(wordList, wordSearchInfo, directions):
 
 
 def tryWordInDirection(wordSearchInfo, word, direction, startingHeight, startingWidth, heightChange, widthChange, startingDepth = -1, depthChange = 0):
-    # TODO BUG I think these below might be changing the starting values...
-    print('BUG DHW:', startingDepth, startingHeight, startingWidth)
     nextWordSearchDepthIndex = startingDepth
     nextWordSearchHeightIndex = startingHeight
     nextWordSearchWidthIndex = startingWidth
