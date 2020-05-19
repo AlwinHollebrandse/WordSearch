@@ -6,13 +6,12 @@ from WordSearchInfo import WordSearchInfo
 # TODO missing pure 'IN' and 'OUT' directions
 
 def main():
-    print("generating the word search")
+    print('generating the word search')
     # TODO add the ability to read files from a CLI
     wordSearchGridMultiplier = 2 # the larger this number is, the more likely that every  word gets added
     if wordSearchGridMultiplier < 1:
         print('wordSearchGridMultiplier must be greater than 1')
         return
-    directions = ["right", "rightDown", "down", "leftDown", "left", "leftUp", "up", "rightUp","rightOut", "rightDownOut", "downOut", "leftDownOut", "leftOut", "leftUpOut", "upOut", "rightUpOut", "rightIn", "rightDownIn", "downIn", "leftDownIn", "leftIn", "leftUpIn", "upIn", "rightUpIn"]
     with open('WordSearchWords.txt','r+') as wordListFile:
         wordList = [line.rstrip('\n').upper() for line in wordListFile]
 
@@ -21,9 +20,16 @@ def main():
     sumOfWordLengths = len(''.join(wordList))
     nearestCube = findNearestCube(sumOfWordLengths)
     wordSearchMinLength = max(maxWordLength, nearestCube) + 1 # done to increase the odds of a succesful createWordSearch() due to a better fitting wordSearch
-    wordSearchDepth = random.randint(wordSearchMinLength,(wordSearchGridMultiplier * maxWordLength))
+    wordSearchDepth = random.randint(wordSearchMinLength,(wordSearchGridMultiplier * maxWordLength)) # TODO get from front end. depth = 1 == 2D
     wordSearchHeight = random.randint(wordSearchMinLength, (wordSearchGridMultiplier * wordSearchMinLength))
     wordSearchWidth = random.randint(wordSearchMinLength, (wordSearchGridMultiplier * wordSearchMinLength))
+
+    if (wordSearchDepth == 1):
+        directions = ['right', 'rightDown', 'down', 'leftDown', 'left', 'leftUp', 'up', 'rightUp']
+    else:
+        directions = ['right', 'rightDown', 'down', 'leftDown', 'left', 'leftUp', 'up', 'rightUp', 'rightOut',
+            'rightDownOut', 'downOut', 'leftDownOut', 'leftOut', 'leftUpOut', 'upOut', 'rightUpOut', 'out', 'rightIn',
+            'rightDownIn', 'downIn', 'leftDownIn', 'leftIn', 'leftUpIn', 'upIn', 'rightUpIn', 'in']
 
     wordSearchInfo = WordSearchInfo(wordSearchHeight = wordSearchHeight, wordSearchWidth = wordSearchWidth, 
         wordSearchDepth = wordSearchDepth, wordList = wordList)
@@ -49,7 +55,7 @@ def main():
 
 
 def fillRestOfWordSearch(wordSearchInfo):
-    LETTERS="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    LETTERS='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     for k in range(wordSearchInfo.wordSearchDepth):
         for j in range(wordSearchInfo.wordSearchHeight):
             for i in range(wordSearchInfo.wordSearchWidth):
@@ -75,7 +81,7 @@ def getCanidatePosition(wordSearchInfo):
     while True: 
         tempOpenWordSearchSpaces = wordSearchInfo.openWordSearchSpaces
         if len(tempOpenWordSearchSpaces) == 0:
-            print("there is no place to put the remaining words. Please try again.")
+            print('there is no place to put the remaining words. Please try again.')
             return -1
         canidatePosition = random.choice(tempOpenWordSearchSpaces)
         candidatePositionDepth = canidatePosition // (wordSearchInfo.wordSearchWidth * wordSearchInfo.wordSearchHeight)
@@ -109,7 +115,7 @@ def createWordSearch(wordList, wordSearchInfo, directions):
                 break
         if wordAdded == False:
             wordSearchInfo.openWordSearchSpaces.remove(canidatePosition)
-    print("words left:",wordList)
+    print('words left:',wordList)
     if len(wordList) == 0:
         return True
     return False
@@ -151,427 +157,119 @@ def tryWord(word, depth, height, width, directions, wordSearchInfo):
             usedDirection = direction
 
         # Depth does not change
-            if direction == "right":
+            if direction == 'right':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'right',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = 0, widthChange = 1)
                 
-            elif direction == "rightDown":
+            elif direction == 'rightDown':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightDown',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = 1, widthChange = 1)
 
-            elif direction == "down":
+            elif direction == 'down':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightDown',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = 1, widthChange = 0)
                 
-            elif direction == "leftDown":
+            elif direction == 'leftDown':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'leftDown',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = 1, widthChange = -1)
 
-            elif direction == "left":
+            elif direction == 'left':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'left',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = 0, widthChange = -1)
   
-            elif direction == "leftUp":
+            elif direction == 'leftUp':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'leftUp',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = -1, widthChange = -1)
 
-            elif direction == "up":
+            elif direction == 'up':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'up',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = -1, widthChange = 0)
 
-            elif direction == "rightUp":
+            elif direction == 'rightUp':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightUp',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 0, heightChange = -1, widthChange = 1)
 
         # depth goes out (to the user)
-            elif direction == "rightOut":
+            elif direction == 'rightOut':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightOut',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = 0, widthChange = 1)
                 
-            elif direction == "rightDownOut":
+            elif direction == 'rightDownOut':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightDownOut',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = 1, widthChange = 1)
 
-            elif direction == "downOut":
+            elif direction == 'downOut':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightDownOut',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = 1, widthChange = 0)
                 
-            elif direction == "leftDownOut":
+            elif direction == 'leftDownOut':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'leftDownOut',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = 1, widthChange = -1)
 
-            elif direction == "leftOut":
+            elif direction == 'leftOut':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'leftOut',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = 0, widthChange = -1)
   
-            elif direction == "leftUpOut":
+            elif direction == 'leftUpOut':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'leftUpOut',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = -1, widthChange = -1)
 
-            elif direction == "upOut":
+            elif direction == 'upOut':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'upOut',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = -1, widthChange = 0)
 
-            elif direction == "rightUpOut":
+            elif direction == 'rightUpOut':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightUpOut',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = -1, widthChange = 1)
 
+            elif direction == 'out':
+                wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'out',
+                    startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = -1, heightChange = 0, widthChange = 0)
+
         #depth goes in (away from user)
-            elif direction == "rightIn":
+            elif direction == 'rightIn':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightIn',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = 0, widthChange = 1)
                 
-            elif direction == "rightDownIn":
+            elif direction == 'rightDownIn':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightDownIn',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = 1, widthChange = 1)
 
-            elif direction == "downIn":
+            elif direction == 'downIn':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightDownIn',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = 1, widthChange = 0)
                 
-            elif direction == "leftDownIn":
+            elif direction == 'leftDownIn':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'leftDownIn',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = 1, widthChange = -1)
 
-            elif direction == "leftIn":
+            elif direction == 'leftIn':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'leftIn',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = 0, widthChange = -1)
   
-            elif direction == "leftUpIn":
+            elif direction == 'leftUpIn':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'leftUpIn',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = -1, widthChange = -1)
 
-            elif direction == "upIn":
+            elif direction == 'upIn':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'upIn',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = -1, widthChange = 0)
 
-            elif direction == "rightUpIn":
+            elif direction == 'rightUpIn':
                 wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'rightUpIn',
                     startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = -1, widthChange = 1)
+            
+            elif direction == 'in':
+                wordAdded = tryWordInDirection(wordSearchInfo = wordSearchInfo, word = word, direction = 'in',
+                    startingDepth = depth, startingHeight = height, startingWidth = width, depthChange = 1, heightChange = 0, widthChange = 0)
         else:
             break
 
     if wordAdded:
-        print("added ", word, " at position [", depth, "][", height, "][", width, "] in the ", direction, " direction")
+        print('added ', word, ' at position [', depth, '][', height, '][', width, '] in the ', direction, ' direction')
         return True
     else:
         return False
 
-
-
-    # nextWordSearchWidthIndex = canidatePosition % wordSearchInfo.wordSearchWidth#TODO this is already calculated in gcp
-    # nextWordSearchHeightIndex = (canidatePosition // wordSearchInfo.wordSearchWidth) % wordSearchInfo.wordSearchHeight
-    # nextWordSearchDepthIndex = canidatePosition // (wordSearchInfo.wordSearchWidth * wordSearchInfo.wordSearchHeight)
-    # #get direction to try
-    # random.shuffle(directions)
-    # directionWorks = True
-    # for direction in directions:
-    #     directionWorks = True
-    #     nextWordSearchWidthIndexCopy = nextWordSearchWidthIndex
-    #     nextWordSearchHeightIndexCopy = nextWordSearchHeightIndex
-    #     nextWordSearchDepthIndexCopy = nextWordSearchDepthIndex
-
-    # #Depth does not change
-    #     if direction == "right":
-    #         for letter in word[1:]: #the first element is skipped because it is already checked in getCanidatePosition
-    #             if nextWordSearchWidthIndexCopy + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[nextWordSearchDepthIndexCopy][nextWordSearchHeightIndexCopy][nextWordSearchWidthIndexCopy + 1] == 0:
-    #                 nextWordSearchWidthIndexCopy += 1
-    #             else:
-    #                 directionWorks = False
-    #                 break
-    #         if directionWorks:
-    #             addWord(0, 0, 1, nextWordSearchDepthIndex,  nextWordSearchHeightIndex,  nextWordSearchWidthIndex, word, wordSearchInfo)
-    #             break
-            
-    #     elif direction == "rightDown":
-    #         for letter in word[1:]:
-    #             if nextWordSearchHeightIndexCopy + 1 < wordSearchInfo.wordSearchHeight and nextWordSearchWidthIndexCopy + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[nextWordSearchDepthIndexCopy][nextWordSearchHeightIndexCopy + 1][nextWordSearchWidthIndexCopy + 1] == 0:
-    #                 nextWordSearchHeightIndexCopy += 1
-    #                 nextWordSearchWidthIndexCopy += 1
-    #             else:
-    #                 directionWorks = False
-    #                 break
-    #         if directionWorks:
-    #             addWord(0, 1, 1, nextWordSearchDepthIndex,  nextWordSearchHeightIndex,  nextWordSearchWidthIndex, word, wordSearchInfo)
-    #             break
-
-    #     elif direction == "down":
-    #         for letter in word[1:]:
-    #             if nextWordSearchHeightIndexCopy + 1 < wordSearchInfo.wordSearchHeight and wordSearchInfo.wordSearch[nextWordSearchDepthIndexCopy][nextWordSearchHeightIndexCopy + 1][nextWordSearchWidthIndexCopy] == 0:
-    #                 nextWordSearchHeightIndexCopy += 1
-    #             else:
-    #                 directionWorks = False
-    #                 break
-    #         if directionWorks:
-    #             addWord(0, 1, 0, nextWordSearchDepthIndex,  nextWordSearchHeightIndex,  nextWordSearchWidthIndex, word, wordSearchInfo)
-    #             break
-
-    #     elif direction == "leftDown":
-    #         for letter in word[1:]:
-    #             if nextWordSearchHeightIndexCopy + 1 < wordSearchInfo.wordSearchHeight and nextWordSearchWidthIndexCopy - 1 >= 0 and wordSearchInfo.wordSearch[nextWordSearchDepthIndexCopy][nextWordSearchHeightIndexCopy + 1][nextWordSearchWidthIndexCopy - 1] == 0:
-    #                 nextWordSearchHeightIndexCopy += 1
-    #                 nextWordSearchWidthIndexCopy += -1
-    #             else:
-    #                 directionWorks = False
-    #                 break
-    #         if directionWorks:
-    #             addWord(0, 1, -1, nextWordSearchDepthIndex,  nextWordSearchHeightIndex,  nextWordSearchWidthIndex, word, wordSearchInfo)
-    #             break
-
-    #     elif direction == "left":
-    #         for letter in word[1:]:
-    #             if nextWordSearchWidthIndexCopy - 1 >= 0 and wordSearchInfo.wordSearch[nextWordSearchDepthIndexCopy][nextWordSearchHeightIndexCopy][nextWordSearchWidthIndexCopy - 1] == 0:
-    #                 nextWordSearchWidthIndexCopy += -1
-    #             else:
-    #                 directionWorks = False
-    #                 break
-    #         if directionWorks:
-    #             addWord(0, 0, -1, nextWordSearchDepthIndex,  nextWordSearchHeightIndex,  nextWordSearchWidthIndex, word, wordSearchInfo)
-    #             break
-
-    #     elif direction == "leftUp":
-    #         for letter in word[1:]:
-    #             if nextWordSearchHeightIndexCopy - 1 >= 0 and nextWordSearchWidthIndexCopy - 1 >= 0 and wordSearchInfo.wordSearch[nextWordSearchDepthIndexCopy][nextWordSearchHeightIndexCopy - 1][nextWordSearchWidthIndexCopy - 1] == 0:
-    #                 nextWordSearchHeightIndexCopy += -1
-    #                 nextWordSearchWidthIndexCopy += -1
-    #             else:
-    #                 directionWorks = False
-    #                 break
-    #         if directionWorks:
-    #             addWord(0, -1, -1, nextWordSearchDepthIndex,  nextWordSearchHeightIndex,  nextWordSearchWidthIndex, word, wordSearchInfo)
-    #             break
-
-    #     elif direction == "up":
-    #         for letter in word[1:]:
-    #             if nextWordSearchHeightIndexCopy - 1 >= 0 and wordSearchInfo.wordSearch[nextWordSearchDepthIndexCopy][nextWordSearchHeightIndexCopy - 1][nextWordSearchWidthIndexCopy] == 0:
-    #                 nextWordSearchHeightIndexCopy += -1
-    #             else:
-    #                 directionWorks = False
-    #                 break
-    #         if directionWorks:
-    #             addWord(0, -1, 0, nextWordSearchDepthIndex,  nextWordSearchHeightIndex,  nextWordSearchWidthIndex, word, wordSearchInfo)
-    #             break
-            
-    #     elif direction == "rightUp":
-    #         for letter in word[1:]:
-    #             if nextWordSearchHeightIndexCopy - 1 >= 0 and nextWordSearchWidthIndexCopy + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[nextWordSearchDepthIndexCopy][nextWordSearchHeightIndexCopy - 1][nextWordSearchWidthIndexCopy + 1] == 0:
-    #                 nextWordSearchHeightIndexCopy += -1
-    #                 nextWordSearchWidthIndexCopy += 1
-    #             else:
-    #                 directionWorks = False
-    #                 break
-    #         if directionWorks:
-    #             addWord(0, -1, 1, nextWordSearchDepthIndex,  nextWordSearchHeightIndex,  nextWordSearchWidthIndex, word, wordSearchInfo)
-    #             break
-
-    # #depth goes out (to the user)
-    #     elif direction == "rightOut":
-    #         for letter in word[1:]: #the first element is skipped because it is already checked in getCanidatePosition
-    #             if nextWordSearchDepthIndexCopy - 1 >= 0 and nextWordSearchWidthIndexCopy + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[nextWordSearchDepthIndexCopy - 1][nextWordSearchHeightIndexCopy][nextWordSearchWidthIndexCopy + 1] == 0:
-    #                 nextWordSearchDepthIndexCopy += -1
-    #                 nextWordSearchWidthIndexCopy += 1
-    #             else:
-    #                 directionWorks = False
-    #                 break
-    #         if directionWorks:
-    #             addWord(-1, 0, 1, nextWordSearchDepthIndex,  nextWordSearchHeightIndex,  nextWordSearchWidthIndex, word, wordSearchInfo)
-    #             break
-            
-    #     elif direction == "rightDownOut":
-    #         for letter in word[1:]:
-    #             if nextWordSearchDepthIndexCopy - 1 >= 0 and nextWordSearchHeightIndexCopy + 1 < wordSearchInfo.wordSearchHeight and nextWordSearchWidthIndexCopy + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[nextWordSearchDepthIndexCopy - 1][nextWordSearchHeightIndexCopy + 1][nextWordSearchWidthIndexCopy + 1] == 0:
-    #                 nextWordSearchDepthIndexCopy += -1
-    #                 nextWordSearchHeightIndexCopy += 1
-    #                 nextWordSearchWidthIndexCopy += 1
-    #             else:
-    #                 directionWorks = False
-    #                 break
-    #         if directionWorks:
-    #             addWord(-1, 1, 1, nextWordSearchDepthIndex,  nextWordSearchHeightIndex,  nextWordSearchWidthIndex, word, wordSearchInfo)
-    #             break
-
-    #     elif direction == "downOut":
-    #         for letter in word[1:]:
-    #             if nextWordSearchDepthIndexCopy - 1 >= 0 and nextWordSearchHeightIndexCopy + 1 < wordSearchInfo.wordSearchHeight and wordSearchInfo.wordSearch[nextWordSearchDepthIndexCopy - 1][nextWordSearchHeightIndexCopy + 1][nextWordSearchWidthIndexCopy] == 0:
-    #                 nextWordSearchDepthIndexCopy += -1
-    #                 nextWordSearchHeightIndexCopy += 1
-    #             else:
-    #                 directionWorks = False
-    #                 break
-    #         if directionWorks:
-    #             addWord(-1, 1, 0, nextWordSearchDepthIndex,  nextWordSearchHeightIndex,  nextWordSearchWidthIndex, word, wordSearchInfo)
-    #             break
-
-    #     elif direction == "leftDownOut":
-    #         for letter in word[1:]:
-    #             if nextWordSearchDepthIndexCopy - 1 >= 0 and nextWordSearchHeightIndexCopy + 1 < wordSearchInfo.wordSearchHeight and nextWordSearchWidthIndexCopy - 1 >= 0 and wordSearchInfo.wordSearch[nextWordSearchDepthIndexCopy - 1][nextWordSearchHeightIndexCopy + 1][nextWordSearchWidthIndexCopy - 1] == 0:
-    #                 nextWordSearchDepthIndexCopy += -1
-    #                 nextWordSearchHeightIndexCopy += 1
-    #                 nextWordSearchWidthIndexCopy += -1
-    #             else:
-    #                 directionWorks = False
-    #                 break
-    #         if directionWorks:
-    #             addWord(-1, 1, -1, nextWordSearchDepthIndex,  nextWordSearchHeightIndex,  nextWordSearchWidthIndex, word, wordSearchInfo)
-    #             break
-
-    #     elif direction == "leftOut":
-    #         for letter in word[1:]:
-    #             if nextWordSearchDepthIndexCopy - 1 >= 0 and nextWordSearchWidthIndexCopy - 1 >= 0 and wordSearchInfo.wordSearch[nextWordSearchDepthIndexCopy - 1][nextWordSearchHeightIndexCopy][nextWordSearchWidthIndexCopy - 1] == 0:
-    #                 nextWordSearchDepthIndexCopy += -1
-    #                 nextWordSearchWidthIndexCopy += -1
-    #             else:
-    #                 directionWorks = False
-    #                 break
-    #         if directionWorks:
-    #             addWord(-1, 0, -1, nextWordSearchDepthIndex,  nextWordSearchHeightIndex,  nextWordSearchWidthIndex, word, wordSearchInfo)
-    #             break
-
-    #     elif direction == "leftUpOut":
-    #         for letter in word[1:]:
-    #             if nextWordSearchDepthIndexCopy - 1 >= 0 and nextWordSearchHeightIndexCopy - 1 >= 0 and nextWordSearchWidthIndexCopy - 1 >= 0 and wordSearchInfo.wordSearch[nextWordSearchDepthIndexCopy - 1][nextWordSearchHeightIndexCopy - 1][nextWordSearchWidthIndexCopy - 1] == 0:
-    #                 nextWordSearchDepthIndexCopy += -1
-    #                 nextWordSearchHeightIndexCopy += -1
-    #                 nextWordSearchWidthIndexCopy += -1
-    #             else:
-    #                 directionWorks = False
-    #                 break
-    #         if directionWorks:
-    #             addWord(-1, -1, -1, nextWordSearchDepthIndex,  nextWordSearchHeightIndex,  nextWordSearchWidthIndex, word, wordSearchInfo)
-    #             break
-
-    #     elif direction == "upOut":
-    #         for letter in word[1:]:
-    #             if nextWordSearchDepthIndexCopy - 1 >= 0 and nextWordSearchHeightIndexCopy - 1 >= 0 and wordSearchInfo.wordSearch[nextWordSearchDepthIndexCopy - 1][nextWordSearchHeightIndexCopy - 1][nextWordSearchWidthIndexCopy] == 0:
-    #                 nextWordSearchDepthIndexCopy += -1
-    #                 nextWordSearchHeightIndexCopy += -1
-    #             else:
-    #                 directionWorks = False
-    #                 break
-    #         if directionWorks:
-    #             addWord(-1, -1, 0, nextWordSearchDepthIndex,  nextWordSearchHeightIndex,  nextWordSearchWidthIndex, word, wordSearchInfo)
-    #             break
-            
-    #     elif direction == "rightUpOut":
-    #         for letter in word[1:]:
-    #             if nextWordSearchDepthIndexCopy - 1 >= 0 and nextWordSearchHeightIndexCopy - 1 >= 0 and nextWordSearchWidthIndexCopy + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[nextWordSearchDepthIndexCopy - 1][nextWordSearchHeightIndexCopy - 1][nextWordSearchWidthIndexCopy + 1] == 0:
-    #                 nextWordSearchDepthIndexCopy += -1
-    #                 nextWordSearchHeightIndexCopy += -1
-    #                 nextWordSearchWidthIndexCopy += 1
-    #             else:
-    #                 directionWorks = False
-    #                 break
-    #         if directionWorks:
-    #             addWord(-1, -1, 1, nextWordSearchDepthIndex,  nextWordSearchHeightIndex,  nextWordSearchWidthIndex, word, wordSearchInfo)
-    #             break
-
-    # #depth goes in (away from user)
-    #     elif direction == "rightIn":
-    #         for letter in word[1:]: #the first element is skipped because it is already checked in getCanidatePosition
-    #             if nextWordSearchDepthIndexCopy + 1 < wordSearchInfo.wordSearchDepth and nextWordSearchWidthIndexCopy + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[nextWordSearchDepthIndexCopy + 1][nextWordSearchHeightIndexCopy][nextWordSearchWidthIndexCopy + 1] == 0:
-    #                 nextWordSearchDepthIndexCopy += 1
-    #                 nextWordSearchWidthIndexCopy += 1
-    #             else:
-    #                 directionWorks = False
-    #                 break
-    #         if directionWorks:
-    #             addWord(1, 0, 1, nextWordSearchDepthIndex,  nextWordSearchHeightIndex,  nextWordSearchWidthIndex, word, wordSearchInfo)
-    #             break
-            
-    #     elif direction == "rightDownIn":
-    #         for letter in word[1:]:
-    #             if nextWordSearchDepthIndexCopy + 1 < wordSearchInfo.wordSearchDepth and nextWordSearchHeightIndexCopy + 1 < wordSearchInfo.wordSearchHeight and nextWordSearchWidthIndexCopy + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[nextWordSearchDepthIndexCopy + 1][nextWordSearchHeightIndexCopy + 1][nextWordSearchWidthIndexCopy + 1] == 0:
-    #                 nextWordSearchDepthIndexCopy += 1
-    #                 nextWordSearchHeightIndexCopy += 1
-    #                 nextWordSearchWidthIndexCopy += 1
-    #             else:
-    #                 directionWorks = False
-    #                 break
-    #         if directionWorks:
-    #             addWord(1, 1, 1, nextWordSearchDepthIndex,  nextWordSearchHeightIndex,  nextWordSearchWidthIndex, word, wordSearchInfo)
-    #             break
-
-    #     elif direction == "downIn":
-    #         for letter in word[1:]:
-    #             if nextWordSearchDepthIndexCopy + 1 < wordSearchInfo.wordSearchDepth and nextWordSearchHeightIndexCopy + 1 < wordSearchInfo.wordSearchHeight and wordSearchInfo.wordSearch[nextWordSearchDepthIndexCopy + 1][nextWordSearchHeightIndexCopy + 1][nextWordSearchWidthIndexCopy] == 0:
-    #                 nextWordSearchDepthIndexCopy += 1
-    #                 nextWordSearchHeightIndexCopy += 1
-    #             else:
-    #                 directionWorks = False
-    #                 break
-    #         if directionWorks:
-    #             addWord(1, 1, 0, nextWordSearchDepthIndex,  nextWordSearchHeightIndex,  nextWordSearchWidthIndex, word, wordSearchInfo)
-    #             break
-
-    #     elif direction == "leftDownIn":
-    #         for letter in word[1:]:
-    #             if nextWordSearchDepthIndexCopy + 1 < wordSearchInfo.wordSearchDepth and nextWordSearchHeightIndexCopy + 1 < wordSearchInfo.wordSearchHeight and nextWordSearchWidthIndexCopy - 1 >= 0 and wordSearchInfo.wordSearch[nextWordSearchDepthIndexCopy + 1][nextWordSearchHeightIndexCopy + 1][nextWordSearchWidthIndexCopy - 1] == 0:
-    #                 nextWordSearchDepthIndexCopy += 1
-    #                 nextWordSearchHeightIndexCopy += 1
-    #                 nextWordSearchWidthIndexCopy += -1
-    #             else:
-    #                 directionWorks = False
-    #                 break
-    #         if directionWorks:
-    #             addWord(1, 1, -1, nextWordSearchDepthIndex,  nextWordSearchHeightIndex,  nextWordSearchWidthIndex, word, wordSearchInfo)
-    #             break
-
-    #     elif direction == "leftIn":
-    #         for letter in word[1:]:
-    #             if nextWordSearchDepthIndexCopy + 1 < wordSearchInfo.wordSearchDepth and nextWordSearchWidthIndexCopy - 1 >= 0 and wordSearchInfo.wordSearch[nextWordSearchDepthIndexCopy + 1][nextWordSearchHeightIndexCopy][nextWordSearchWidthIndexCopy - 1] == 0:
-    #                 nextWordSearchDepthIndexCopy += 1
-    #                 nextWordSearchWidthIndexCopy += -1
-    #             else:
-    #                 directionWorks = False
-    #                 break
-    #         if directionWorks:
-    #             addWord(1, 0, -1, nextWordSearchDepthIndex,  nextWordSearchHeightIndex,  nextWordSearchWidthIndex, word, wordSearchInfo)
-    #             break
-
-    #     elif direction == "leftUpIn":
-    #         for letter in word[1:]:
-    #             if nextWordSearchDepthIndexCopy + 1 < wordSearchInfo.wordSearchDepth and nextWordSearchHeightIndexCopy - 1 >= 0 and nextWordSearchWidthIndexCopy - 1 >= 0 and wordSearchInfo.wordSearch[nextWordSearchDepthIndexCopy + 1][nextWordSearchHeightIndexCopy - 1][nextWordSearchWidthIndexCopy - 1] == 0:
-    #                 nextWordSearchDepthIndexCopy += 1
-    #                 nextWordSearchHeightIndexCopy += -1
-    #                 nextWordSearchWidthIndexCopy += -1
-    #             else:
-    #                 directionWorks = False
-    #                 break
-    #         if directionWorks:
-    #             addWord(1, -1, -1, nextWordSearchDepthIndex,  nextWordSearchHeightIndex,  nextWordSearchWidthIndex, word, wordSearchInfo)
-    #             break
-
-    #     elif direction == "upIn":
-    #         for letter in word[1:]:
-    #             if nextWordSearchDepthIndexCopy + 1 < wordSearchInfo.wordSearchDepth and nextWordSearchHeightIndexCopy - 1 >= 0 and wordSearchInfo.wordSearch[nextWordSearchDepthIndexCopy + 1][nextWordSearchHeightIndexCopy - 1][nextWordSearchWidthIndexCopy] == 0:
-    #                 nextWordSearchDepthIndexCopy += 1
-    #                 nextWordSearchHeightIndexCopy += -1
-    #             else:
-    #                 directionWorks = False
-    #                 break
-    #         if directionWorks:
-    #             addWord(1, -1, 0, nextWordSearchDepthIndex,  nextWordSearchHeightIndex,  nextWordSearchWidthIndex, word, wordSearchInfo)
-    #             break
-            
-    #     elif direction == "rightUpIn":
-    #         for letter in word[1:]:
-    #             if nextWordSearchDepthIndexCopy + 1 < wordSearchInfo.wordSearchDepth and nextWordSearchHeightIndexCopy - 1 >= 0 and nextWordSearchWidthIndexCopy + 1 < wordSearchInfo.wordSearchWidth and wordSearchInfo.wordSearch[nextWordSearchDepthIndexCopy + 1][nextWordSearchHeightIndexCopy - 1][nextWordSearchWidthIndexCopy + 1] == 0:
-    #                 nextWordSearchDepthIndexCopy += 1
-    #                 nextWordSearchHeightIndexCopy += -1
-    #                 nextWordSearchWidthIndexCopy += 1
-    #             else:
-    #                 directionWorks = False
-    #                 break
-    #         if directionWorks:
-    #             addWord(1, -1, 1, nextWordSearchDepthIndex,  nextWordSearchHeightIndex,  nextWordSearchWidthIndex, word, wordSearchInfo)
-    #             break
-
-    # if directionWorks:
-    #     print("added ", word, " at position [",nextWordSearchDepthIndex,"][",nextWordSearchHeightIndex,"][",nextWordSearchWidthIndex,"] in the ",direction," direction")
-    #     return True
-    # else:
-    #     return False
-
-
-if __name__=="__main__":
+if __name__=='__main__':
     main()  
