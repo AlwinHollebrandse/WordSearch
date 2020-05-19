@@ -42,7 +42,7 @@ class WordSearchInfo:
         if (self.wordSearchDepth <= 0):
             print('the provided wordSearch does not have a valid depth', file=wordSearchFile)
 
-        elif (self.wordSearchDepth > 1):
+        elif (self.wordSearchDepth > 0):
             for k in range((self.wordSearchDepth)):
                 for j in range(self.wordSearchHeight):
                     print(*self.wordSearch[k][j], file=wordSearchFile)

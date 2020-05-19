@@ -9,11 +9,8 @@ def main():
     wordListFile = open('WordSearchWords.txt','r') # TODO change to some random default or frontend provided
     wordSearchFile = open('WordSearch.txt','r') # TODO change to json object
     wordList = [line.rstrip('\n').upper() for line in wordListFile]
-    wordSearch = parse3DWordSearchFromFile(wordSearchFile) # TODO read from json object too
+    wordSearch, wordSearchDepth, wordSearchHeight, wordSearchWidth = parse3DWordSearchFromFile(wordSearchFile) # TODO read from json object too
 
-    wordSearchDepth = len(wordSearch)
-    wordSearchHeight = len(wordSearch[0])
-    wordSearchWidth = len(wordSearch[0][0])
     wordSearchInfo = WordSearchInfo(wordSearchHeight = wordSearchHeight, wordSearchWidth = wordSearchWidth, 
         wordSearchDepth = wordSearchDepth, wordList = wordList, wordSearch = wordSearch)
     wordSearchInfo.toString()
@@ -50,7 +47,7 @@ def parse3DWordSearchFromFile(wordSearchFile):
                     wordSearch3DIn2DWidth = -1
                 wordSearch3DIn2DWidth += 1
 
-    return wordSearch
+    return wordSearch, depth, height, width
 
 
 # finds the height of each layer in the wordSearch by incrementing a counter until the first "layer break" is encountered
