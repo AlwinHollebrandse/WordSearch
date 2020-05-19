@@ -2,8 +2,6 @@ import random
 import math
 from WordSearchInfo import WordSearchInfo
 
-# was 449 lines
-
 def main():
     twoDimensional = False # TODO get from front end. depth = 1 == 2D
 
