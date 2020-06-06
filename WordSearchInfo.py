@@ -1,4 +1,5 @@
-import numpy as np 
+import numpy as np
+import json
 
 class WordSearchInfo:
     def __init__(self, wordSearchHeight, wordSearchWidth, wordSearchDepth, wordList, wordSearch = []):
@@ -24,9 +25,6 @@ class WordSearchInfo:
         self.printWordSearch()
 
 
-    # TODO make 'JSON tostring'
-
-
     def printWordSearch(self):
         if (self.wordSearchDepth <= 0):
             print('the provided wordSearch does not have a valid depth')
@@ -36,6 +34,22 @@ class WordSearchInfo:
                 for j in range(self.wordSearchHeight):
                     print(*self.wordSearch[k][j])
                 print('\n')
+
+    
+    def wordSearchToJSON(self):
+        response = {}
+        if (self.wordSearchDepth <= 0):
+            response.error = 'the provided wordSearch does not have a valid depth'
+
+        elif (self.wordSearchDepth > 0):
+            for k in range((self.wordSearchDepth)):
+                currentDepth = 'depth' + str(k)
+                response[currentDepth] = {}
+                for j in range(self.wordSearchHeight):
+                    currentHeight = 'height' + str(j)
+                    response[currentDepth][currentHeight] = (*self.wordSearch[k][j],)
+        print(response)
+        return json.dumps(response)
 
 
     def printWordSearchToFile(self, wordSearchFile):
