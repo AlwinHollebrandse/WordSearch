@@ -12,6 +12,8 @@ class WordSearchGenerator:
         if (len(wordList) == 0):
             with open('WordSearchWords.txt','r+') as wordListFile:
                 wordList = [line.rstrip('\n').upper() for line in wordListFile] # TODO have a long list of words in here, then based on difficulty pick 'x' amount
+        else:
+            wordList = [word.upper() for word in wordList]
 
         #set up size of wordSeach
         maxWordLength = len(max(wordList, key = len))

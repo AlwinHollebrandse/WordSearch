@@ -37,19 +37,13 @@ class WordSearchInfo:
 
     
     def wordSearchToJSON(self):
-        response = {}
-        if (self.wordSearchDepth <= 0):
-            response.error = 'the provided wordSearch does not have a valid depth'
-
-        elif (self.wordSearchDepth > 0):
-            for k in range((self.wordSearchDepth)):
-                currentDepth = 'depth' + str(k)
-                response[currentDepth] = {}
-                for j in range(self.wordSearchHeight):
-                    currentHeight = 'height' + str(j)
-                    response[currentDepth][currentHeight] = (*self.wordSearch[k][j],)
-        print(response)
-        return json.dumps(response)
+        wordSearchInfoJSON = {}
+        wordSearchInfoJSON['wordList'] = self.wordList
+        wordSearchInfoJSON['wordSearch'] = self.wordSearch.tolist()
+        wordSearchInfoJSON['wordSearchDepth'] = self.wordSearchDepth
+        wordSearchInfoJSON['wordSearchHeight'] = self.wordSearchHeight
+        wordSearchInfoJSON['wordSearchWidth'] = self.wordSearchWidth
+        return json.dumps(wordSearchInfoJSON)
 
 
     def printWordSearchToFile(self, wordSearchFile):

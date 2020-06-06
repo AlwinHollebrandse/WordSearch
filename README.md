@@ -17,3 +17,9 @@ This works the same the 2D version, just with an extra dimension.
 # Developer’s Note
 This project was inspired by my dislike of solving word searches. The task seemed so tedious that I knew it was something a computer was meant to do. Initially I just created the 2D word search solver. After completing this, I realized that I did not want to write my own word searches to test my solver with. This led me to designing the 2D world search generator. Upon completing this, I wondered if I could create 3D versions. It turns out that I could, but it was more difficult than I anticipated. Because the project seemed small and simple to me when I started it, I did not create it on Github. As the scope ramped up it became apparent that I should have used Github. Hence the large initial commit.
 Because this project was a way for me to learn python, there were a few design things I would change. I should have used numpy arrays instead of lists. While I was developing this, I assumed that lists worked like arrays because of the ‘[]’s. My java background betrayed me. I learned the hard way that the reading order is the opposite of what I expected. As in a python list with the indexes of [1][2][3] will check the depth 1, the hweight2, and the width 3 as opposed to my expected array reading of width 1, height 2, and depth 3. At least the numerous and seemingly impossible “list out of bounds” errors taught me well. 
+
+# Local Usage
+Install the components needed to use a virtual shell
+In one terminal, enter the needed shell. Ex: 'pipenv shell'
+In that same terminal, run the bootstrap file. './bootstrap.sh'
+In an other terminal hit the endpoint you want. Ex: 'curl http://localhost:5000/solveWordSearch'
