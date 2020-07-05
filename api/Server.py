@@ -1,10 +1,12 @@
 # based on code explained here: https://auth0.com/blog/developing-restful-apis-with-python-and-flask/
 
 from flask import Flask, request
+from flask_cors import CORS
 from WordSearchGenerator import WordSearchGenerator
 from WordSearchSolver import WordSearchSolver
 
 app = Flask(__name__)
+CORS(app)
 
 incomes = [
   { 'description': 'salary', 'amount': 5000 }
@@ -20,6 +22,7 @@ sampleWordSearchInfoJSON = '{"wordList": ["HELLO", "WORLD", "TEST"], "wordSearch
 
 @app.route("/")
 def hello_world():
+  print('Hello, World!')
   return "Hello, World!"
 
 
@@ -34,4 +37,7 @@ def get_wordSearch():
 def generate_WordSearch(): # TODO add params from front end - words to be used Replace wordList/WordSearchWords.txt
   global wordList # TODO delete once both generation and solver work. Replace with params
   wordSearchGenerator = WordSearchGenerator()
-  return wordSearchGenerator.generateWordSearch(twoDimensional = True, wordList = wordList) # TODO make these the front end params 
+  temp = wordSearchGenerator.generateWordSearch(twoDimensional = True, wordList = wordList) # TODO make these the front end params 
+  print('temp:' + temp)
+  return temp
+  # return wordSearchGenerator.generateWordSearch(twoDimensional = True, wordList = wordList) # TODO make these the front end params 

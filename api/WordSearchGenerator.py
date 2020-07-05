@@ -15,7 +15,7 @@ class WordSearchGenerator:
         else:
             wordList = [word.upper() for word in wordList]
 
-        #set up size of wordSeach
+        #set up size of wordSearch
         maxWordLength = len(max(wordList, key = len))
         sumOfWordLengths = len(''.join(wordList))
         nearestCube = self.findNearestCube(sumOfWordLengths)
