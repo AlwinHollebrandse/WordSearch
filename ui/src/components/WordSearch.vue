@@ -18,11 +18,26 @@
             </section>
         </section>
 
+        <vue-glide>
+            <vue-glide-slide
+                type=carousel
+                v-bind:startAt=5
+                v-bind:wordSearch=wordSearch
+                v-for="i in 10"
+                :key="i">
+                Slide {{ wordSearch[i] }}
+            </vue-glide-slide>
+            <template slot="control">
+                <button data-glide-dir="<">prev</button>
+                <button data-glide-dir=">">next</button>
+            </template>
+        </vue-glide>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
+import { Glide, GlideSlide } from 'vue-glide-js'
 
 export default {
     name: 'WordSearch',
@@ -35,9 +50,12 @@ export default {
             wordSearchHeight: null,
             wordSearchWidth: null,
             loading: true,
-            errored: false
+            errored: false,
+            [Glide.name]: Glide,
+            [GlideSlide.name]: GlideSlide
         }
     },
+    // props: [wordSearch],
     mounted () {
         axios
             .get('http://0.0.0.0:5000/generateWordSearch')
