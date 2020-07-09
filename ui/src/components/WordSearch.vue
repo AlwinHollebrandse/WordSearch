@@ -18,18 +18,38 @@
             </section>
         </section>
 
-        <vue-glide>
-            <vue-glide-slide
-                type=carousel
-                v-bind:startAt=5
-                v-bind:wordSearch=wordSearch
-                v-for="i in 10"
-                :key="i">
-                Slide {{ wordSearch[i] }}
+        <!-- <table id='wordSearchTable'>
+            <tr v-for='row in wordSearch[0]' :key='row'>{{ row }}</tr>
+        </table>
+
+
+
+        <table id="secondTable">
+        <thead>
+            <tr>
+                <th v-for="col in columns" :key='col'>{{col}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="row in wordSearch[0]" :key='row'>
+                <td v-for="col in columns" :key='col'>{{row[col]}}</td>
+            </tr>
+        </tbody>
+        </table> -->
+
+
+
+        <vue-glide type=carousel>
+            <!-- <vue-glide-slide v-for='(page, index) in wordSearch' :key="`page-${index}`"> -->
+            <vue-glide-slide v-for='page in wordSearch' :key='page'>
+                <!-- Layer {{ page }} TODO add "layer {{index}}" -->
+                <table id='wordSearchTable'>
+                    <tr v-for='row in wordSearch[0]' :key='row'>{{ row }}</tr>
+                </table>
             </vue-glide-slide>
-            <template slot="control">
-                <button data-glide-dir="<">prev</button>
-                <button data-glide-dir=">">next</button>
+            <template slot='control' v-if='wordSearchDepth>1'>
+                <button data-glide-dir='<'>prev</button>
+                <button data-glide-dir='>'>next</button>
             </template>
         </vue-glide>
     </div>
