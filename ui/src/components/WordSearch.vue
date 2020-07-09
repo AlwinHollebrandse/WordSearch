@@ -10,42 +10,26 @@
             <div v-if='loading'>Loading...</div>
 
             <section v-else class='WordSearch'>
-                <div>wordList: {{ wordList }}</div>
+                <div>wordList: {{ wordList }}</div> <!--move to a diff componet and pass to api call-->
                 <div>{{ wordSearch }}</div>
+                <div>{{ wordSearch[0] }}</div>
+                <div>{{ wordSearch[1] }}</div>
                 <div>wordSearchDepth: {{ wordSearchDepth }}</div>
                 <div>wordSearchHeight: {{ wordSearchHeight }}</div>
                 <div>wordSearchWidth: {{ wordSearchWidth }}</div>
             </section>
         </section>
 
-        <!-- <table id='wordSearchTable'>
-            <tr v-for='row in wordSearch[0]' :key='row'>{{ row }}</tr>
-        </table>
-
-
-
-        <table id="secondTable">
-        <thead>
-            <tr>
-                <th v-for="col in columns" :key='col'>{{col}}</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="row in wordSearch[0]" :key='row'>
-                <td v-for="col in columns" :key='col'>{{row[col]}}</td>
-            </tr>
-        </tbody>
-        </table> -->
-
-
-
-        <vue-glide type=carousel>
-            <!-- <vue-glide-slide v-for='(page, index) in wordSearch' :key="`page-${index}`"> -->
-            <vue-glide-slide v-for='page in wordSearch' :key='page'>
-                <!-- Layer {{ page }} TODO add "layer {{index}}" -->
-                <table id='wordSearchTable'>
-                    <tr v-for='row in wordSearch[0]' :key='row'>{{ row }}</tr>
-                </table>
+        <vue-glide type='carousel'>
+            <vue-glide-slide v-for='(page, index) in wordSearch' :key='page'>
+                <div id='layer'>
+                    Layer {{index}}
+                    <table id='wordSearchTable'>
+                        <tr v-for='row in page' :key='row'>
+                            <td v-for='col in row' :key='col'>{{ col }}</td>
+                        </tr>
+                    </table>
+                </div>
             </vue-glide-slide>
             <template slot='control' v-if='wordSearchDepth>1'>
                 <button data-glide-dir='<'>prev</button>
@@ -75,7 +59,6 @@ export default {
             [GlideSlide.name]: GlideSlide
         }
     },
-    // props: [wordSearch],
     mounted () {
         axios
             .get('http://0.0.0.0:5000/generateWordSearch')
