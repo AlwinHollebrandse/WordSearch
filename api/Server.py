@@ -37,7 +37,4 @@ def get_wordSearch():
 def generate_WordSearch(): # TODO add params from front end - words to be used Replace wordList/WordSearchWords.txt
   global wordList # TODO delete once both generation and solver work. Replace with params
   wordSearchGenerator = WordSearchGenerator()
-  temp = wordSearchGenerator.generateWordSearch(twoDimensional = True, wordList = wordList) # TODO make these the front end params 
-  print('temp:' + temp)
-  return temp
-  # return wordSearchGenerator.generateWordSearch(twoDimensional = True, wordList = wordList) # TODO make these the front end params 
+  return wordSearchGenerator.generateWordSearch(twoDimensional = False, wordList = wordList) # TODO make these the front end params
